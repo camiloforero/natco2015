@@ -1,0 +1,22 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Habitacion {{ habitacion.numero }} {% endblock %}
+{% block page-header %} Habitación {{habitacion.numero }} {% endblock %}
+{% block body_block %}
+<table>
+<tr>
+    <th>Nombre</th>
+    <th>Celular</th>
+</tr>
+
+{% for persona in habitacion.ocupantes.all %}
+    <tr>
+        <td> {{ persona.user.first_name }} {{ persona.user.last_name }} </td>
+        <td> {{ persona.celular }} </td>
+    </tr>
+{% endfor %}
+</table>
+
+{% endblock %}

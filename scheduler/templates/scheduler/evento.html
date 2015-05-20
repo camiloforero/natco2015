@@ -1,0 +1,17 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}{{ test }}{% endblock %}
+
+{% block body_block %}
+<h2>{{ evento.nombre}}</h2>
+<h2>{{ evento.salon.nombre }} </h2>
+<h3>Hora inicio: {{evento.horaInicio }}</h3>
+<h3>Hora fin: {{evento.horaFin }}</h3>
+<h3>Facilitador: {{evento.faci.user.first_name }} {{evento.faci.user.last_name }} </h3>
+<h3>Archivos adjuntos: {{ MEDIA_URL }}{{evento.adjuntos.name}}</h3>
+
+</table>
+
+{% endblock %}

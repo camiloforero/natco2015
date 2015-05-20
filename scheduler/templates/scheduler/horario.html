@@ -1,0 +1,17 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}{{ test }}{% endblock %}
+
+{% block body_block %}
+
+<h1>Hola, {{ user.username }}</h1>
+<div>Tu tienes un rol de {{ persona.rol }} cierto?</div>
+<div>Acá está tu horario:</div>
+{% for evento in eventos %}
+<a href="{% url 'scheduler:evento' evento.pk %}">{{ evento.nombre }}</a>
+
+{% endfor %}
+
+{% endblock %}
