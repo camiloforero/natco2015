@@ -9,13 +9,24 @@
         <meta name="author" content="Camilo Forero">
         <title>Natco2015 - {% block title %}Woooooo!{% endblock %}</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <style>
+        body {
+                background: url({% static "scheduler/img/bienvenido.png" %});
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-attachment: fixed;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+    }
+    </style>
     </head>
 
     <body>
 
-        <hr />
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -27,30 +38,36 @@
             <a class="navbar-brand" href="/scheduler/">Natco2015</a>
         </div>
         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
+            <menu class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
+                {% if user.persona.rol.esConference %}A
+                <li><a href="{% url 'scheduler:horario_conference' %}">Mi horario</a></li>
+                <li><a href="{% url 'scheduler:lista_habitaciones' %}">Habitaciones</a></li>
+                {% else %}
                 <li><a href="{% url 'scheduler:horario' %}">Mi horario</a></li>
-                <li><a href="{% url 'scheduler:logout' %}">Logout</a></li>
+                {% endif %}
+                <li><a href="{% url 'scheduler:networking' %}">Networking</a></li>
+                <li><a href="{% url 'scheduler:logout' %}?next=/">Logout</a></li>
             {% else %}
                 <li><a href="{% url 'scheduler:login' %}">Login</a></li>
             {% endif %}
             </ul>
         </div>
     </div>
-    </div>
+    </nav>
+    <hr/>
     <div class="container-fluid">
         <div class="row">
-            <div class="page-header">
+            <header class="page-header">
                 <h1> {% block page-header %} NATCO {% endblock %} </h1>
-            </div>
+            </header>
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-0 main">
-                <div>
+                <main>
                     {% block body_block %}<h3>Si estás viendo esto, no estás reemplazando el body_block de manera apropiada</h3>{% endblock %}
-                </div>
+                </main>
             </div>
         </div>
     </div>
-    <img src="{% static "scheduler/img/bienvenido.png" %}" class="img-responsive" alt="Bienvenido!" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     </body>

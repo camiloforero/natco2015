@@ -98,6 +98,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_URL = '/app/login'
+LOGIN_REDIRECT_URL = '/app'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -107,5 +110,3 @@ MEDIA_ROOT = 'media/'
 MEDIA_URL = '/media/'
 
 
-LOGIN_REDIRECT_URL = '/scheduler/login/'
-LOGIN_URL = '/scheduler/login/'

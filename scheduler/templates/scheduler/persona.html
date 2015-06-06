@@ -1,0 +1,45 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+{% load static %}
+{% block title %}{{ test }}{% endblock %}
+{% block page-header  %} {{persona.user.first_name}} {{persona.user.last_name}}  {% endblock %}
+
+{% block body_block %}
+<img src="/scheduler{% get_media_prefix %}{{persona.foto}}" alt="No hay foto" height="100"/>
+<table class="table">
+    <tr>
+        <td>Correo electrónico</td>
+        <td>{{persona.user.email}}</td>
+    </tr>
+    <tr>
+        <td>Cargo</td>
+        <td>{{persona.cargo}}</td>
+    </tr>
+    <tr>
+        <td>Celular</td>
+        <td>{{persona.celular}}</td>
+    </tr>
+    <tr>
+        <td>LC</td>
+        <td>{{persona.lc}}</td>
+    </tr>
+    <tr>
+        <td>Habitación</td>
+        <td>{{persona.habitacion.numero}}</td>
+    </tr>
+    <tr>
+        <td>Cédula</td>
+        <td>{{persona.cedula}}</td>
+    </tr>
+    <tr>
+        <td>Rol</td>
+        <td>{{persona.rol.tipo}}</td>
+    </tr>
+    <tr>
+        <td>Bus</td>
+        <td>{{persona.bus}}</td>
+    </tr>
+
+
+{% endblock %}

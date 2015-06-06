@@ -1,0 +1,31 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}{{ test }}{% endblock %}
+{% block page-header  %} Habitaciones  {% endblock %}
+
+{% block body_block %}
+<table class="table">
+    <tr>
+        <th>Bus</th>
+        <th>Nombre</th>
+        <th>LC</th>
+        <th>Celular</th>
+    <tr>
+{% for bus in buses %}
+    {% for ocupante in bus.ocupantes.all %}
+        <tr>
+            {% if forloop.first %}
+            <td rowspan="{{ bus.ocupantes.all|length }}">{{bus.placa}}  </td>
+            {% endif %}
+            <td> {{ocupante.user.first_name}} {{ocupante.user.last_name}}</td>
+            <td> {{ocupante.lc}}</td>
+            <td> {{ocupante.celular}}</td>
+        </tr>   
+    {% endfor %}
+{% endfor %}
+</table>
+
+
+{% endblock %}

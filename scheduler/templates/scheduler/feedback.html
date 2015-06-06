@@ -1,0 +1,19 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}{{ test }}{% endblock %}
+{% block page-header  %}  {% endblock %}
+
+{% block body_block %}
+
+<form method="post" action="{% url 'scheduler:feedback_form' '12'%}">
+    {{ formset.management_form }}
+    <table>
+        {% for form in formset %}
+        {{ form }}
+        {% endfor %}
+    </table>
+<form>
+
+{% endblock %}

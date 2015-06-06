@@ -1,0 +1,14 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %} Acceso no autorizado {% endblock %}
+{% block page-header  %} NOTHING TO SEE HERE! {% endblock %}
+
+{% block body_block %}
+No tienes los permisos para acceder a esta página
+Pero casi ganas, sigue intentando! Acá tienes un video
+<div class="embed-responsive embed-responsive-16by9">
+    <iframe src="https://www.youtube.com/embed/QH2-TGUlwu4" frameborder="0" allowfullscreen></iframe>
+</div>
+{% endblock %}

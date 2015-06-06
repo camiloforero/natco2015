@@ -9,9 +9,28 @@
 <h1>Hola, {{ user.username }}</h1>
 <div>Tu tienes un rol de {{ persona.rol }} cierto?</div>
 <div>Acá está tu horario:</div>
-{% for evento in eventos %}
-<a href="{% url 'scheduler:evento' evento.pk %}">{{ evento.nombre }}</a>
-
+{% regroup eventos by horaInicio.date as eventos_list %}
+<table class="table">
+{% for dia in eventos_list%}
+    <tr>
+        <td colspan="4">{{dia.grouper}}</td>
+    <tr>
+    <tr>
+        <th>Nombre</th>
+        <th>Salón</th>
+        <th>Inicio</th>
+        <th>Fin</th>
+    </tr>
+    {% for evento in dia.list %}
+    <tr>
+        <td>
+            <a href="{% url 'scheduler:evento' evento.pk %}">{{ evento.nombre }}</a>
+        </td>
+        <td> {{ evento.salon.nombre }} </td>
+        <td> {{evento.horaInicio.time }} </td>
+        <td> {{evento.horaFin.time}}</td>
+    </tr>
+    {% endfor %}
 {% endfor %}
-
+</table>
 {% endblock %}

@@ -2,16 +2,24 @@
 
 {% load staticfiles %}
 
-{% block title %}{{ test }}{% endblock %}
-
+{% block title %}{{ evento.nombre }}{% endblock %}
+{% block page-header %}{{evento.nombre}}{% endblock %}
 {% block body_block %}
-<h2>{{ evento.nombre}}</h2>
-<h2>{{ evento.salon.nombre }} </h2>
+<h3>Salón {{ evento.salon.nombre }} </h3>
+<h3>Tipo: {{ evento.tipo }}</h3>
 <h3>Hora inicio: {{evento.horaInicio }}</h3>
 <h3>Hora fin: {{evento.horaFin }}</h3>
-<h3>Facilitador: {{evento.faci.user.first_name }} {{evento.faci.user.last_name }} </h3>
-<h3>Archivos adjuntos: {{ MEDIA_URL }}{{evento.adjuntos.name}}</h3>
-
-</table>
+<h3>Facilitadores: {% for faci in evento.facis.all %}{{faci.user.first_name }} {{faci.user.last_name }}, {% endfor %}</h3>
+{% if request.user.persona.rol.esConference %}
+<h3>OC encargado: {% for oc in evento.ocsEncargados.all %}{{oc.user.first_name}} {{oc.user.last_name }}, {% endfor %}
+<h3>Archivos adjuntos: <a href="{{ MEDIA_URL }}{{evento.adjuntos.name}}">{{evento.adjuntos.name}}</a></h3>
+<p>Descripción OC: {{evento.descripcionOC}} </p>
+<p><a href="{% url 'scheduler:asistentes_evento' evento.pk %}">Ver inscritos</a></p>
+{% else %}
+<form method="post" action="{% url 'scheduler:inscribir_evento' evento.pk %}">
+    {% csrf_token %}
+    <input type="submit" value="Inscribir evento"></input>
+</form>
+{% endif %}
 
 {% endblock %}
