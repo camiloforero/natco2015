@@ -1,22 +1,24 @@
 {% extends 'scheduler/base.html' %}
 
 {% load staticfiles %}
+{% load app_filters %}
 
 {% block title %}Habitacion {{ habitacion.numero }} {% endblock %}
-{% block page-header %} Habitación {{habitacion.numero }} {% endblock %}
+{% block page-header %} Consulta tu habitación {% endblock %}
+{% block body-class %}habitacion{% endblock %}
 {% block body_block %}
-<table>
-<tr>
-    <th>Nombre</th>
-    <th>Celular</th>
-</tr>
-
-{% for persona in habitacion.ocupantes.all %}
-    <tr>
-        <td> {{ persona.user.first_name }} {{ persona.user.last_name }} </td>
-        <td> {{ persona.celular }} </td>
-    </tr>
-{% endfor %}
-</table>
+<div class="container-fluid habitacion">
+    <div class="row">
+        <div class="numero col-xs-6">
+            No. <strong> {{ habitacion.numero }} </strong>
+        </div>
+        <div class="roommates col-xs-6">
+            <h4>Roommates</h4>
+            {% for persona in habitacion.ocupantes.all %}
+                {{ persona.user.first_name|truncatewords2:1 }} {{ persona.user.last_name|truncatewords2:1 }}<br/>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 
 {% endblock %}

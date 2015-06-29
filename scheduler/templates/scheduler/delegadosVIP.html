@@ -1,0 +1,16 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Delegados VIP{% endblock %}
+{% block page-header  %}Delegados VIP{% endblock %}
+
+{% block body_block %}
+<ol>
+    {% for delegado in delegados %}
+    <li>{{delegado}}: {{delegado.puntos}}</li>
+    {% endfor %}
+</ol>
+
+
+{% endblock %}

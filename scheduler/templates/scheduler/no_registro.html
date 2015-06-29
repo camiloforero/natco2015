@@ -1,0 +1,15 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Regístrate!{% endblock %}
+{% block page-header  %}Bienvenido a NATCO, {{request.user.first_name}}!  {% endblock %}
+{% block body-class %}inicio{% endblock %}
+
+{% block body_block %}
+<p>Hola! Si ves este mensaje ya estás dentro de tu cuenta personal para NATCO 2015! Sólo te falta registrarte el día del evento con un miembro del OC, quien escaneará este código QR (el cual también estará en tu escarapela).
+También puedes ir cambiando tu contraseña en <a href="{% url "scheduler:password_change" %}">este link.</a></p>
+<img class="img-responsive center-block" src="{{ MEDIA_URL }}{{request.user.persona.qrRegistro }}"></img>
+
+
+{% endblock %}

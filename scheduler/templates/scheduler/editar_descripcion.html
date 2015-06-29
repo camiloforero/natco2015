@@ -1,0 +1,17 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Editar descripción{% endblock %}
+{% block page-header  %}Editar descripción  {% endblock %}
+
+{% block body_block %}
+<form class="form" method="POST" action="{% url 'scheduler:editar_descripcion' evento.pk %}">
+    
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit"></input>
+</form>
+
+
+{% endblock %}

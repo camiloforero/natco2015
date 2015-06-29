@@ -1,0 +1,30 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+{% load tz %}
+
+{% block title %}{{ test }}{% endblock %}
+
+{% block body_block %}
+
+{% regroup eventos by horaInicio|date:"j \d\e F, H:i" as eventos_list %}
+<table class="table">
+{% for dia in eventos_list%}
+    <tr>
+        <td colspan="4">{{dia.grouper}}</td>
+    <tr>
+    <tr>
+        <th>Nombre</th>
+        <th>Salón</th>
+    </tr>
+    {% for evento in dia.list %}
+    <tr>
+        <td>
+            <a href="{% url 'scheduler:evento' evento.pk %}">{{ evento.nombre }}</a>
+        </td>
+        <td> {{ evento.salon.nombre }} </td>
+    </tr>
+    {% endfor %}
+{% endfor %}
+</table>
+{% endblock %}

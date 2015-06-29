@@ -1,13 +1,24 @@
 {% extends 'scheduler/base.html' %}
 
 {% load staticfiles %}
+{% load static %}
 
 {% block title %}Perfil{% endblock %}
-{% block page-header %}Mi perfil {% endblock %}
+{% block page-header %}
+            <img src="{% get_media_prefix %}{{user.persona.foto}}" alt="Imagen de perfil" width="120" class="img-responsive img-circle center-block"/><br/>
+Hola {{user.first_name }} 
+{% endblock %}
+{% block body-class %}inicio{% endblock %}
 {% block body_block %}
-<div>
-    Hola, {{ user.first_name }}. Bienvenido a NATCO 2015.
+<div class="fluid-container">
+    <div class="row">
+        <div class="col-xs-12" >
+        <p> Bienvenido a NATCO 2015, el #MejorEventoDelAño. De parte del OC y de AIESEC en Colombia esperamos tengas una experiencia maravillosa en este evento.</p>
+        <p>Consulta tu habitación y tus roommates dando <a href="{% url "scheduler:habitacion" %}">click aquí</a></p>
+        <p>Para consultar tu horario y tus sesiones da <a href="{% url "scheduler:horario" %}">click aquí.</a></p>
+        <p>Para cambiar tu contraseña da <a href="{% url 'scheduler:password_change' %}?next=/app/">click aquí</a></p>
+        </div>
+    </div>
 </div>
-<div>Tu habitación es la {{ user.persona.habitacion.numero }}. <a href="{% url "scheduler:habitacion" %}">Ver ocupantes</a>
 
 {% endblock %}

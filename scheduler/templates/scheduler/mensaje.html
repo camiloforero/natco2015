@@ -1,0 +1,17 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Mensaje{% endblock %}
+{% block page-header  %}Mensaje{% endblock %}
+
+{% block body_block %}
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

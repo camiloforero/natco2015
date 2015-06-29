@@ -3,10 +3,17 @@
 {% load staticfiles %}
 
 {% block title %}{{ test }}{% endblock %}
-{% block page-header  %}Exito!  {% endblock %}
+{% block page-header  %}{% endblock %}
 
 {% block body_block %}
-
-Haz inscrito la sesión {{ evento.nombre }} satisfactoriamente
-
+{% if agregado %}
+<p>Haz inscrito la sesión {{ evento.nombre }} satisfactoriamente</p>
+{% else %}
+<p>Error: El evento {{ evento2.nombre }} ya está en tu horario. Si deseas reemplazarlo por {{ evento.nombre }}, haz click en el siguiente botón:</p>
+<form method="post" action="{% url 'scheduler:inscribir_evento' evento.pk %}">
+    {% csrf_token %}
+    <input type="hidden" name="pk2" value="{{ evento2.pk }}"/>
+    <input type="submit" value="Inscribir"/>
+</form>
+{% endif %}
 {% endblock %}

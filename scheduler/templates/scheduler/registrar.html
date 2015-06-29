@@ -6,10 +6,10 @@
 {% block page-header  %}  {% endblock %}
 {% block body_block %}
 {% if persona.estaRegistrado %}
-{{ persona.user.first_name }} {{ persona.user.last_name }} ya está registrada
+<p>{{ persona.user.first_name }} {{ persona.user.last_name }} ya está registrada. <a href="{% url 'scheduler:persona' persona.pk %} ">Ver perfil</a></p>
 {% else %}
-
-Deseas registrar a {{ persona.user.first_name }} {{ persona.user.last_name}}?
+<img src="{{ persona.foto.url }}" alt="foto" class="img-responsive"/>
+<p>Deseas registrar a {{ persona.user.first_name }} {{ persona.user.last_name}}?</p>
 <form action="{{ request.get_full_path }}" method="post">
     {% csrf_token %}
     <input type="submit" value="Registrar"/> 

@@ -5,21 +5,34 @@
 {% block title %}{{ evento.nombre }}{% endblock %}
 {% block page-header %}{{evento.nombre}}{% endblock %}
 {% block body_block %}
-<h3>Salón {{ evento.salon.nombre }} </h3>
-<h3>Tipo: {{ evento.tipo }}</h3>
-<h3>Hora inicio: {{evento.horaInicio }}</h3>
-<h3>Hora fin: {{evento.horaFin }}</h3>
-<h3>Facilitadores: {% for faci in evento.facis.all %}{{faci.user.first_name }} {{faci.user.last_name }}, {% endfor %}</h3>
+{% if request.user.is_superuser %}
+<a href="{% url "admin:scheduler_evento_change" evento.pk %}">Modificar evento (admin)</a>
+{% endif %}
+<p>Salón {{ evento.salon.nombre }} </p>
+<p>Tipo: {{ evento.tipo }}</p>
+<p>Hora inicio: {{evento.horaInicio }}</p>
+<p>Hora fin: {{evento.horaFin }}</p>
+<p>Facilitadores: {% for faci in evento.facis.all %}{{faci.user.first_name }} {{faci.user.last_name }}, {% endfor %}</p>
 {% if request.user.persona.rol.esConference %}
-<h3>OC encargado: {% for oc in evento.ocsEncargados.all %}{{oc.user.first_name}} {{oc.user.last_name }}, {% endfor %}
-<h3>Archivos adjuntos: <a href="{{ MEDIA_URL }}{{evento.adjuntos.name}}">{{evento.adjuntos.name}}</a></h3>
-<p>Descripción OC: {{evento.descripcionOC}} </p>
-<p><a href="{% url 'scheduler:asistentes_evento' evento.pk %}">Ver inscritos</a></p>
+    <p>OC encargado: {% for oc in evento.ocsEncargados.all %}{{oc.user.first_name}} {{oc.user.last_name }}, {% endfor %}</p>
+    <p>Archivos adjuntos: 
+        {% if evento.adjuntos %}<a href="{{ MEDIA_URL }}{{evento.adjuntos.name}}"><strong>Descargar</strong></a>
+        {% else %} 
+        No hay archivos adjuntos
+        {% endif %}
+    </p>
+
+    <form method="post" enctype="multipart/form-data" action="{% url 'scheduler:evento' evento.pk %}">{% csrf_token %}{{ form.errors}} {{ form }} <input type="submit" value="Subir archivo"></input></form>
+
+    <p>Descripción OC: {{evento.descripcionOC}}<br/> <a href="{% url 'scheduler:editar_descripcion' pk=evento.pk %}">Editar </a></p>
+    {% if evento.esOpcional %}
+    <p><a href="{% url 'scheduler:asistentes_evento' evento.pk %}">Ver inscritos</a></p>
+    {% endif %}
 {% else %}
-<form method="post" action="{% url 'scheduler:inscribir_evento' evento.pk %}">
-    {% csrf_token %}
-    <input type="submit" value="Inscribir evento"></input>
-</form>
+    <form method="post" action="{% url 'scheduler:inscribir_evento' evento.pk %}">
+        {% csrf_token %}
+        <input type="submit" value="Inscribir evento"></input>
+    </form>
 {% endif %}
 
 {% endblock %}

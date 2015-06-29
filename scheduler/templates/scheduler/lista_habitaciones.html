@@ -6,6 +6,7 @@
 {% block page-header  %} Habitaciones  {% endblock %}
 
 {% block body_block %}
+    <p><a href="{% url 'scheduler:lista_habitaciones_csv' %}">Descargar como Excel</a></p>
 <table class="table">
     <tr>
         <th>Habitación</th>

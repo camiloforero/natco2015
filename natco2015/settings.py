@@ -25,6 +25,9 @@ SECRET_KEY = '_x8_$iql!kjq*@n^o)_!*wultf@09hj#cw6aapn!9m&nhsb$6)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+INTERNAL_IPS = ('200.118.50.79')
+
 ALLOWED_HOSTS = []
 
 
@@ -38,9 +41,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'scheduler',
+    'colorful',
+    'widget_tweaks',
+    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,6 +88,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'natcoapp',
         'HOST': 'localhost',
+        'USER': 'camilo',
     }
 }
 
@@ -88,7 +96,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-co'
 
 TIME_ZONE = 'America/Bogota'
 
@@ -106,7 +114,7 @@ LOGIN_REDIRECT_URL = '/app'
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-MEDIA_ROOT = 'media/'
-MEDIA_URL = '/media/'
+STATIC_ROOT = '/var/www/html/static/'
 
-
+MEDIA_URL = '/app/media/'
+MEDIA_ROOT = '/var/www/html/media/'

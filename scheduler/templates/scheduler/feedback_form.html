@@ -1,0 +1,25 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}{{ fecha }} {% endblock %}
+{% block page-header  %}  {% endblock %}
+
+{% block body_block %}
+
+<form method="post" action="">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table>
+        {% for form in formset %}
+        <tr>
+            <td colspan=2>{{ form.evento.value}}</td>
+        </tr>
+        {{ form }}
+        {% endfor %}
+        {{ eform }}
+    </table>
+    <input type="submit", value="Enviar">
+</form>
+
+{% endblock %}

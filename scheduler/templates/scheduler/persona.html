@@ -2,11 +2,13 @@
 
 {% load staticfiles %}
 {% load static %}
-{% block title %}{{ test }}{% endblock %}
-{% block page-header  %} {{persona.user.first_name}} {{persona.user.last_name}}  {% endblock %}
+{% block title %}Perfil{% endblock %}
+{% block page-header  %} 
+<img src="{% get_media_prefix %}{{persona.foto}}" alt="No hay foto" width="120" class="img-responsive img-circle center-block" />
+{{persona.user.first_name}} {{persona.user.last_name}}  {% endblock %}
+{% block body-class %}perfil{% endblock %}
 
 {% block body_block %}
-<img src="/scheduler{% get_media_prefix %}{{persona.foto}}" alt="No hay foto" height="100"/>
 <table class="table">
     <tr>
         <td>Correo electrónico</td>
@@ -24,6 +26,11 @@
         <td>LC</td>
         <td>{{persona.lc}}</td>
     </tr>
+    {% if request.user.persona.rol.esConference %}
+    <tr><td>&nbsp; </td><td></td></tr>
+    <tr>
+        <td colspan=2><strong>Admin</strong></td>
+    </tr>
     <tr>
         <td>Habitación</td>
         <td>{{persona.habitacion.numero}}</td>
@@ -40,6 +47,8 @@
         <td>Bus</td>
         <td>{{persona.bus}}</td>
     </tr>
+    {% endif %}
+</table>
 
 
 {% endblock %}

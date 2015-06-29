@@ -3,21 +3,33 @@
 {% load staticfiles %}
 
 {% block title %}Login{% endblock %}
-
+{% block page-header %} 
+<img alt="Bienvenido a NATCO" src="{% static "scheduler/img/logoNATCO.svg"%}"/>
+{% endblock %}
+{% block body-class %}login{% endblock %}
 {% block body_block %}
-<h1>Login to NatcoApp</h1>
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
+<div class="container-fluid">
+    <div class="row form">
+        <div class="col-xs-4"></div>
+        <label class="col-xs-8" style="text-align: center">Por favor Inicia Sesión</label>
+        <form id="login_form" method="post" action="{% url 'scheduler:login' %}">
+            {% csrf_token %}
+            <label for="username" class="col-xs-4">Usuario: </label><input id="username" class="col-xs-8" type="text" name="username" value="" />
+            <label for="password" class="col-xs-4">Contraseña: </label><input id="password" class="col-xs-8" type="password" name="password" value=""  />
 
-<form id="login_form" method="post" action="{% url 'scheduler:login' %}">
-    {% csrf_token %}
-    Username: <input type="text" name="username" value="" size="50" />
-    <br />
-    Password: <input type="password" name="password" value="" size="50" />
-    <br />
-    <input type="hidden" name="next" value="{{ next }}" />
-    <input type="submit" value="login" />
-</form>
+            <input type="hidden" name="next" value="{{ next }}" />
+            <div class="col-xs-6"></div>
+            <input type="submit" class="col-xs-4" value="login" />
+        </form>
+    </div>
+</div>
+<nav class="redes">
+    Síguenos en nuestras redes sociales:<br/>
+    <a href="https://www.facebook.com/aiesecincolombiaconfrences"><img width="30px" height="30px" src="{% static "scheduler/img/facebook-icon.svg" %}" alt="Facebook"/></a>
+    <a href="https://twitter.com/aieseccolombia"><img width="30px" height="30px" src="{% static "scheduler/img/twitter-icon.svg" %}" alt="Twitter"/></a>
+</nav>
 
 {% endblock %}

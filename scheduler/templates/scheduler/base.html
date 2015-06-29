@@ -4,50 +4,55 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         <meta name="description" content="">
         <meta name="author" content="Camilo Forero">
         <title>Natco2015 - {% block title %}Woooooo!{% endblock %}</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <link rel="icon" href="/static/favicon.png" type="image/png" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="{% static "scheduler/css/style.css"%}"/>
+        <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.2/fullcalendar.min.css' />
+        <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.2/fullcalendar.min.css' />
+        {% if request.user.username == 'comunicaciones' %}
         <style>
         body {
-                background: url({% static "scheduler/img/bienvenido.png" %});
-                background-repeat: no-repeat;
-                background-position: center center;
-                background-attachment: fixed;
-                -webkit-background-size: cover;
-                -moz-background-size: cover;
-                -o-background-size: cover;
-                background-size: cover;
-    }
-    </style>
+            font-family: "Comic Sans Ms", "nexa", Verdana, sans-serif !important;
+        }
+        </style>
+        {% endif %}
     </head>
 
-    <body>
+    <body class="{% block body-class %} {% endblock %}">
+
 
 
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container-fluid">
-        <div class="navbar-header">
+        <header class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-            <a class="navbar-brand" href="/scheduler/">Natco2015</a>
-        </div>
+            <a class="navbar-brand" href="/app/">Natco2015</a>
+        </header>
         <div class="navbar-collapse collapse">
             <menu class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
-                {% if user.persona.rol.esConference %}A
-                <li><a href="{% url 'scheduler:horario_conference' %}">Mi horario</a></li>
-                <li><a href="{% url 'scheduler:lista_habitaciones' %}">Habitaciones</a></li>
-                {% else %}
                 <li><a href="{% url 'scheduler:horario' %}">Mi horario</a></li>
+                {% if user.persona.rol.esConference %}
+                <li><a href="{% url 'scheduler:horario_admin' %}">Horario general</a></li>
+                <li><a href="{% url 'scheduler:lista_habitaciones' %}">Habitaciones</a></li>
+                <li><a href="{% url 'scheduler:buses' %}">Ver buses</a></li>
+                {% else %}
+                    <li><a href="{% url 'scheduler:lista_inscribir_evento' %}">Inscribir eventos</a></li>
+                    {% if user.persona.rol.esJD %}
+                    <li><a href="{% url 'scheduler:feedback' %}">Feedback</a></li>
+                    {% endif %}
                 {% endif %}
                 <li><a href="{% url 'scheduler:networking' %}">Networking</a></li>
-                <li><a href="{% url 'scheduler:logout' %}?next=/">Logout</a></li>
+                <li><a href="{% url 'scheduler:logout' %}">Logout</a></li>
             {% else %}
                 <li><a href="{% url 'scheduler:login' %}">Login</a></li>
             {% endif %}
@@ -55,13 +60,12 @@
         </div>
     </div>
     </nav>
-    <hr/>
     <div class="container-fluid">
         <div class="row">
-            <header class="page-header">
-                <h1> {% block page-header %} NATCO {% endblock %} </h1>
-            </header>
-            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-0 main">
+            <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 main">
+    <header> 
+        <h1>{% block page-header %} {% endblock %}</h1>
+    </header>
                 <main>
                     {% block body_block %}<h3>Si estás viendo esto, no estás reemplazando el body_block de manera apropiada</h3>{% endblock %}
                 </main>
@@ -70,5 +74,7 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    {% block scripts%}
+    {% endblock %}
     </body>
 </html>

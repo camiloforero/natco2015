@@ -3,17 +3,15 @@
 {% load staticfiles %}
 
 {% block title %}{{ test }}{% endblock %}
-{% block page-header  %}  {% endblock %}
+{% block page-header  %}Feedback  {% endblock %}
 
 {% block body_block %}
+<p>Tu feedback es muy importante. Escoge la fecha:</p>
+<ul>
+    {% for fecha in fechas %}
+    <li><a href="{% url 'scheduler:feedback_form' fecha|date:"Y-m-d" %}"</a>{{fecha|date:"DATE_FORMAT"}}</li>
+    {% endfor %}
+</ul>
 
-<form method="post" action="{% url 'scheduler:feedback_form' '12'%}">
-    {{ formset.management_form }}
-    <table>
-        {% for form in formset %}
-        {{ form }}
-        {% endfor %}
-    </table>
-<form>
 
 {% endblock %}

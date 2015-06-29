@@ -1,0 +1,155 @@
+@font-face {
+    font-family: 'nexa';
+    src: url('/static/scheduler/fonts/nexa_light-webfont.eot');
+    src: url('/static/scheduler/fonts/nexa_light-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/static/scheduler/fonts/nexa_light-webfont.woff2') format('woff2'),
+    url('/static/scheduler/fonts/nexa_light-webfont.woff') format('woff'),
+    url('/static/scheduler/fonts/nexa_light-webfont.ttf') format('truetype'),
+    url('/static/scheduler/fonts/nexa_light-webfont.svg#nexa_lightregular') format('svg');
+    font-weight: normal;
+    font-style: normal
+}
+@font-face {
+    font-family: 'nexa';
+    src: url('nexa_bold-webfont.eot');
+    src: url('/static/scheduler/fonts/nexa_bold-webfont.eot?#iefix') format('embedded-opentype'),
+    url('/static/scheduler/fonts/nexa_bold-webfont.woff2') format('woff2'),
+    url('/static/scheduler/fonts/nexa_bold-webfont.woff') format('woff'),
+    url('/static/scheduler/fonts/nexa_bold-webfont.ttf') format('truetype'),
+    url('/static/scheduler/fonts/nexa_bold-webfont.svg#nexa_boldregular') format('svg');
+    font-weight: bold;
+    font-style: normal;
+
+}
+body {
+    background-color: #3D3A3B;
+    color: #F5C701;
+    font-family: 'nexa', Verdana, sans-serif;
+    padding-top:70px;
+    background-repeat:no-repeat;
+    background-size: cover;
+    background-height:100%;
+    background-attachment: fixed;
+    background-position:top right;
+}
+p {
+    color:white;
+}
+body.habitacion {
+    background-image: url('/static/scheduler/img/backgrounds/habitaciones.png');
+}
+body.login {
+    background-image: url('/static/scheduler/img/backgrounds/login.png');
+}
+body.inicio {
+    background-image: url('/static/scheduler/img/backgrounds/inicio.png');
+}
+body.password {
+    background-image: url('/static/scheduler/img/backgrounds/password.png');
+}
+body.horario {
+    background-image: url('/static/scheduler/img/backgrounds/horario.png');
+}
+body.perfil {
+    background-image: url('/static/scheduler/img/backgrounds/perfil.png');
+}
+body.networking {
+    background-image: url('/static/scheduler/img/backgrounds/networking.png');
+    background-position:top center;
+}
+body.patrocinadores {
+    background-image: url('/static/scheduler/img/backgrounds/patrocinadores.png');
+    background-position:top center;
+}
+strong {
+}
+header h1 {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #F5C701;
+    text-align: center
+}
+div.form {
+    border-style: solid;
+    border-width: 2px;
+    padding:15px;
+    padding-right:25px;
+    margin-top:30px
+}
+div.form label {
+    text-align: right;
+    font-size: 0.6em;
+    margin:0px;
+    vertical-align: bottom;
+    font-weight: 300;
+    padding: 0px;
+    padding-right:1em;
+}
+div.form input {
+    border-radius: 15px;
+    margin:0px;
+    margin-bottom: 5px;
+    padding:0px;
+}
+div.habitacion {
+    padding-top:20px
+}
+
+
+div.habitacion div.numero {
+    font-size: 3em;
+    padding-left: 30px;
+    padding-top:20px;
+    line-height:1;
+}
+div.habitacion div.numero::first-letter {
+    font-size:1.5em;
+}
+div.habitacion div.roommates {
+    border-left: 1px solid ;
+    padding-top:20px;
+    color:#ffffff;
+    
+}
+div.habitacion div.roommates h4 {
+    font-size:1em;
+    font-weight:bold;
+    padding-top:0px;
+    margin-top:0;
+}
+nav.redes {
+    margin-top:1em;
+    margin-left:auto;
+    margin-right:auto;
+    width:40%;
+    text-align:center;
+    line-height:1;
+    font-size:0.8em;
+}
+nav.redes img {
+    margin:2px;
+    margin-top:8px;
+}
+
+div.patrocinadores img {
+    padding:2em;
+}
+form textarea {
+    color:#000000;
+    width:100%;
+    height:10em;
+    padding:4px;
+    resize:none;
+}
+
+.table>thead>tr>th {
+  vertical-align: bottom;
+  border-bottom: 2px solid #F5C701;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+  padding: 8px;
+  line-height: 1.42857143;
+  vertical-align: top;
+  border-top: 1px solid #F5C701;
+  color: white
+}

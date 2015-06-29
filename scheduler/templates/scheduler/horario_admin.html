@@ -1,0 +1,77 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+{% load app_filters %}
+
+
+{% block title %}Tu horario{% endblock %}
+{% block body-class %}horario{% endblock %}
+
+{% block body_block %}
+<div id="calendar"></div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.2/fullcalendar.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script>
+$(document).ready(function() {
+
+    // page is now ready, initialize the calendar...
+    function setClickableTooltip(target, content){
+    $( target ).tooltip({
+        show: null, // show immediately 
+        position: { my: "left top", at: "right top" },
+        content: content, //from params
+        hide: { effect: "" }, //fadeOut
+        close: function(event, ui){
+            ui.tooltip.hover(
+                function () {
+                    $(this).stop(true).fadeTo(400, 1); 
+                },
+                function () {
+                    $(this).fadeOut("400", function(){
+                        $(this).remove(); 
+                    })
+                }
+            );
+        }  
+    });
+}
+    $('#calendar').fullCalendar({
+
+        header: {
+            right: 'agendaDay, agendaWeek', 
+        },
+        defaultView: 'agendaWeek',
+        hiddenDays: [4,5],
+        firstDay: 6,
+        allDaySlot: false,
+        defaultDate:'{{ eventos.1.horaInicio|date:'c' }}',
+        scrollTime:'08:00:00',
+        events:[
+            {% for evento in eventos %}
+            {
+                title: '{{ evento.nombre}}',
+                start: '{{ evento.horaInicio|date:'c' }}',
+                end: '{{ evento.horaFin|date:'c' }}',
+                url: '{% url 'scheduler:evento' pk=evento.pk %}',
+                tooltip: 'FACIs:  {{evento.facis.all|join:', '}}</br>' +
+                    'OC encargado: {{evento.ocsEncargados.all|join:', '}}' ,
+                color: '{{ evento.tipo.color }}',
+                textColor: '{{evento.tipo.colorTexto}}',
+            },
+            {% endfor %}
+        ],
+
+        eventRender: function(event, element) {
+            setClickableTooltip(element, event.tooltip);
+            element.attr('title', 'asdf');
+        },
+        // put your options and callbacks here
+    })
+
+});
+</script>
+{% endblock %}

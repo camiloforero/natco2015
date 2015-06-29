@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+from colorful.fields import RGBColorField
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User, Group
 from datetime import datetime
 from django.utils import timezone
@@ -6,6 +9,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.files import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.urlresolvers import reverse
+import os
 import qrcode
 import StringIO
 
@@ -14,85 +18,107 @@ class Bus(models.Model):
     capacidad = models.PositiveSmallIntegerField(default=20)
     def __unicode__(self):
         return self.placa
+    class Meta:
+        verbose_name_plural = "buses"
     
 class Salon(models.Model):
     nombre = models.CharField(max_length=20, unique=True)
     def __unicode__(self):
         return self.nombre
+    class Meta:
+        verbose_name_plural = "salones"
 
 class Habitacion(models.Model):
     numero = models.CharField(max_length=16, unique=True)
+    capacidad = models.PositiveSmallIntegerField(default=4)
     def __unicode__(self):
         return self.numero
+    class Meta:
+        verbose_name_plural = "habitaciones"
 
 class Rol(models.Model):
     tipo = models.CharField(max_length=32, unique=True)
     esConference = models.BooleanField(default=False)
-    esJD = models.BooleanField(default=False)
     esLCP = models.BooleanField(default=False)
     def __unicode__(self):
         return self.tipo
+    class Meta:
+        verbose_name_plural = "roles"
 
 class LC(models.Model):
     nombre = models.CharField(max_length=32, unique=True)
     puntos = models.SmallIntegerField(default=0)
     def __unicode__(self):
         return self.nombre
+    class Meta:
+        verbose_name = "LC"
 
 class Persona(models.Model):
     user = models.OneToOneField(User, unique=True)
     cedula = models.CharField(max_length=16, blank=True, null=True)
-    cargo = models.CharField(max_length=32)
+    cargo = models.CharField(max_length=64)
     celular = models.BigIntegerField(blank=True, null=True)
     area = models.CharField(max_length=16)
     rol = models.ForeignKey(Rol, related_name="personas")
     lc = models.ForeignKey(LC, blank=True, null=True)
     foto = models.ImageField(upload_to='fotos', blank=True, null=True)
     esPrivado = models.BooleanField(default=False)
+    restricciones = models.CharField(max_length=16, default="No")
     habitacion = models.ForeignKey(Habitacion, related_name="ocupantes", null=True, blank=True)
     estaRegistrado = models.BooleanField(default=False)
+    esJD = models.BooleanField(default=False)
     bus=models.ForeignKey(Bus, related_name="ocupantes", null=True, blank=True)
     puntos = models.IntegerField(default=0)
-    qrRegistro = models.ImageField(upload_to='QR', editable=True)
+    qrRegistro = models.ImageField(upload_to='QR', editable=True, blank=True, null=True)
+    delegadoNatco = models.BooleanField(default=True)
+    delegadoVPM = models.BooleanField(default=False)
     def __unicode__(self):
         return self.user.first_name + " " + self.user.last_name 
     def save(self):
-        if not self.pk:
-            self = super(Persona, self).save(commit=False)
-        img = qrcode.make('http://192.241.211.190:8000'+reverse('scheduler:registrar', args=(self.pk,)))
-        img_io = StringIO.StringIO()
-        img.save(img_io, "JPEG")
-        img_file = InMemoryUploadedFile(img_io, None, 'qr1.jpg', 'image/jpg', img_io.len, None)
-        self.qrRegistro.save('QR-'+str(self.pk)+'.jpg', img_file, save=False)
+        if not self.qrRegistro:
+            if not self.pk:
+                super(Persona, self).save()
+            username = os.geteuid()
+            ausername = os.getegid()
+            img = qrcode.make('http://192.241.211.190/app'+reverse('scheduler:registrar', args=(self.pk,)))
+            img_io = StringIO.StringIO()
+            img.save(img_io, "JPEG")
+            img_file = InMemoryUploadedFile(img_io, None, 'qr1.jpg', 'image/jpg', img_io.len, None)
+            self.qrRegistro.save('QR-'+str(self.pk)+'.jpg', img_file, save=False)
         super(Persona, self).save()
+    class Meta:
+        verbose_name_plural = "personas"
+
+class TipoEvento(models.Model):
+    tipo = models.CharField(max_length=32)
+    color = RGBColorField(blank=True, null=True)
+    colorTexto = RGBColorField(blank=True, null=True, verbose_name="Color del texto")
+    esInscribible = models.BooleanField(default=False, help_text="Esto determina si a este evento van todos los asistentes, o es posible inscribirse a el de manera voluntaria")
+    def __unicode__(self):
+        return self.tipo
+    class Meta:
+        verbose_name = "Tipo de evento"
+        verbose_name_plural = "Tipos de evento"
 
 class Evento(models.Model):
-    asistentes = models.ManyToManyField(Rol, related_name="eventos")
-    pAsistentes = models.ManyToManyField(Persona, related_name="eventos", blank=True)
-    horaInicio = models.DateTimeField(default=(datetime(2015, 7, 4, 8, 0, tzinfo=timezone.get_default_timezone() )))
-    horaFin = models.DateTimeField(default=(datetime(2015, 7, 4, 10, 0, tzinfo=timezone.get_default_timezone() )))
-    nombre = models.CharField(max_length=30, unique=True)
+    nombre = models.CharField(max_length=64)
+    tipo = models.ForeignKey(TipoEvento, related_name="eventos", blank=True, null=True, help_text='Qué tipo de evento es? (comidas, plenaria, "Breaking Paradigms", etc.')
+    asistentes = models.ManyToManyField(Rol, related_name="eventos", help_text="Acá puedes elegir los grupos de personas que van a asistir a la sesión.", blank=True)
+    pAsistentes = models.ManyToManyField(Persona, related_name="eventos", blank=True, verbose_name="Asistentes individuales", help_text="Acá se pueden elegir personas individualmente. Este espacio está pensado para aquellas sesiones que son de elección libre, donde los delegados elegirán su sesión preferida a través de la aplicación. Este campo no debería ser modificado desde acá, al menos que un delegado tenga problemas inscribiéndose")
+    horaInicio = models.DateTimeField(default=(datetime(2015, 7, 8, 8, 0, tzinfo=timezone.get_default_timezone() )), verbose_name="Hora de inicio")
+    horaFin = models.DateTimeField(default=(datetime(2015, 7, 8, 10, 0, tzinfo=timezone.get_default_timezone() )), verbose_name="Hora fin")
     salon = models.ForeignKey(Salon, related_name="sesiones")
-    descripcion = models.TextField()
-    capacidad = models.IntegerField(default=400)
+    descripcion = models.TextField(help_text="Esta descripción está disponible para todos los asistentes. Se puede utilizar para darles más información acerca de cualquier parte de la agenda")
     adjuntos = models.FileField(null=True, blank=True)
-    facis = models.ManyToManyField(Persona, related_name="sesiones", limit_choices_to={'rol__tipo':'FACI'})
-    ocsEncargados = models.ManyToManyField(Persona, related_name="eventosACargo", limit_choices_to={'rol__tipo':'OC'})
-    descripcionOC = models.TextField()
-    capacidad=models.PositiveSmallIntegerField(default=100)
-    TIPO1 = 'Work it harder'
-    TIPO2 = 'Make it better'
-    TIPO3 = 'Do it faster'
-    TIPO4 = 'Make us stronger'
-    TIPO_CHOICES = (
-        (TIPO1, TIPO1),
-        (TIPO2, TIPO2),
-        (TIPO3, TIPO3),
-        (TIPO4, TIPO4),
-    )
-    tipo = models.CharField(max_length=32, choices=TIPO_CHOICES, null=True, blank=True)
+    facis = models.ManyToManyField(Persona, related_name="sesiones", limit_choices_to=(Q(rol__tipo="MC")|Q(rol__tipo="Chair")), blank=True)
+    ocsEncargados = models.ManyToManyField(Persona, related_name="eventosACargo", limit_choices_to={'rol__tipo':'OC'}, blank=True, verbose_name="OCs Encargados")
+    descripcionOC = models.TextField(help_text="Esta descripción es visible únicamente por el Conference Team. Utiliza este espacio para colocar información que sea necesaria para que los FACIs y los OCs encargados puedan desarrollar bien sus labores", verbose_name="Descripción Conference Team")
+    capacidad=models.PositiveSmallIntegerField(default=400)
+    esOpcional = models.BooleanField(default=False, help_text="Dice si el evento es opcional o no. En caso afirmativo, este no aparecerá inicialmente en la agenda de los delegados, y estod deberán inscribirse manualmente a el")
     def __unicode__(self):
         return self.nombre
+    class Meta:
+        verbose_name_plural = "eventos"
 
 class Encuesta(models.Model):
     fecha = models.DateField()
@@ -105,6 +131,8 @@ class Encuesta(models.Model):
         unique_together=('fecha', 'lc') 
     def __unicode__(self):
         return "Calificacion de " + self.lc + " el " + self.fecha 
+    class Meta:
+        verbose_name_plural = "encuestas"
 
 class Calificacion(models.Model):
     evento = models.ForeignKey(Evento, related_name='calificacionLC')
@@ -116,6 +144,8 @@ class Calificacion(models.Model):
         unique_together = ('evento', 'encuesta')
     def __unicode__(self):
         return "Calificacion: " + self.evento + " - " + self.encuesta.lc
+    class Meta:
+        verbose_name_plural = "calificaciones"
 
 
 # Create your models here.
