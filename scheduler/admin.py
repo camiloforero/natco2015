@@ -10,7 +10,7 @@ from django.utils.html import format_html
 class HabitacionForm(forms.ModelForm):
     class Meta:
         model = Habitacion
-        fields=['numero', 'capacidad', 'ocupantes']
+        fields=['numero', 'torre', 'capacidad', 'ocupantes']
 
     ocupantes = forms.ModelMultipleChoiceField(queryset = None, required=False)
     def __init__(self, *args, **kwargs):
@@ -29,7 +29,7 @@ class HabitacionForm(forms.ModelForm):
 
 class HabitacionAdmin(admin.ModelAdmin):
     form = HabitacionForm
-    list_display = ['numero', 'capacidad', 'ocupancia']
+    list_display = ['__str__', 'capacidad', 'ocupancia']
 
     def ocupancia(self, obj):
         total = obj.ocupantes.count()
@@ -49,8 +49,8 @@ class PersonaInline(admin.StackedInline):
 
 class UserAdmin(AuthUserAdmin):
     inlines=[PersonaInline]
-    list_display = ['name', 'rol', 'lc', 'bus']
-    list_select_related=('persona__rol', 'persona__lc')
+    list_display = ['name', 'rol', 'lc', 'bus', 'habitacion']
+    list_select_related=('persona__rol', 'persona__lc', 'persona__habitacion')
 
     def name(self, obj):
         return ("%s %s" % (obj.first_name, obj.last_name))
@@ -66,6 +66,10 @@ class UserAdmin(AuthUserAdmin):
     def rol(self, obj):
         return obj.persona.rol
     rol.short_description = 'Rol'
+
+    def habitacion(self, obj):
+        return obj.persona.habitacion
+    rol.short_description = 'Habitacion'
 
 class EventoAdmin(admin.ModelAdmin):
     filter_horizontal = ['ocsEncargados', 'asistentes', 'pAsistentes', 'facis']

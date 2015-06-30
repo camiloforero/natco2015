@@ -5,7 +5,7 @@ import StringIO
 from django.utils.encoding import force_unicode
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import IntegrityError
-from scheduler.models import User, Persona, Rol, LC
+from scheduler.models import User, Persona, Rol, LC, Habitacion
 CLIENT_ID = "natco2015"
 CLIENT_SECRET = "6FHzzKdpWDz3UpBJzxRgaIHM88wqQZR6eIN2Q9v31UbdvqWvl9fnZL4Xo3xpROfy"
 #APP_ID = "12485061" 
@@ -92,6 +92,22 @@ def createUser(user_dict):
             print str(newuser)
             newuser.delete()
             raise
+
+def addRoom(user_dict):
+    startClient()
+    cedula = user_dict["number-numero"].split('.')[0]
+    try:
+        persona = Persona.objects.get(cedula=cedula)
+        numHabitacion = user_dict["cuarto-2"].split(".")[0]
+        torre = user_dict["cuarto"]
+        habitacion = Habitacion.objects.get_or_create(torre=torre, numero=numHabitacion)[0]
+        persona.habitacion = habitacion
+        persona.save()
+    except KeyError:
+        print "%s aún no tiene habitación asignada" % persona
+    except Persona.DoesNotExist:
+        print "La persona con nombre %s %s y cédula %s no está registrada en este momento. Revisar el caso y solucionar manualmente" % (user_dict["name-nombre"], user_dict["last-names-apellidos"], cedula) 
+        
 
 def getImage(imageid):
     global client

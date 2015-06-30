@@ -289,17 +289,17 @@ def escarapelas_vpm(request):
     p = canvas.Canvas(buffer, pagesize=(953,1364))
 
     url = settings.STATIC_ROOT + 'scheduler/img/escarapela_vpm_template.png'
-    personas = Persona.objects.filter(delegadoVPM=True)
-    for persona in personas:
-        p.setFont('Helvetica', 25)
-        p.drawImage(url, 0, 0)
-        p.drawCentredString(402, 805, persona.user.first_name+ ' ' + persona.user.last_name)
-        p.drawCentredString(779, 805, persona.lc.nombre)
-        p.drawCentredString(814, 676, persona.area)
-        p.drawCentredString(402, 676, persona.rol.tipo)
-        print persona.qrRegistro.path
-        p.drawInlineImage(persona.qrRegistro.path, 235,61, 472, 472)
-        p.showPage()
+    personas = Persona.objects.filter(rol__esConference=True)
+    #for persona in personas:
+    p.setFont('Helvetica', 25)
+    p.drawImage(url, 0, 0)
+    #p.drawCentredString(402, 805, persona.user.first_name+ ' ' + persona.user.last_name)
+    #p.drawCentredString(779, 805, persona.lc.nombre)
+    #p.drawCentredString(814, 676, persona.rol.tipo)
+    #p.drawCentredString(402, 676, persona.cargo)
+    #print persona.qrRegistro.path
+    #p.drawInlineImage(persona.qrRegistro.path, 235,61, 472, 472)
+    p.showPage()
     p.save()
     pdf = buffer.getvalue()
     buffer.close()

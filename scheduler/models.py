@@ -29,11 +29,14 @@ class Salon(models.Model):
         verbose_name_plural = "salones"
 
 class Habitacion(models.Model):
-    numero = models.CharField(max_length=16, unique=True)
+    numero = models.CharField(max_length=16)
+    torre = models.CharField(max_length=32)
     capacidad = models.PositiveSmallIntegerField(default=4)
     def __unicode__(self):
-        return self.numero
+        return "%s - %s" % (self.torre, self.numero) 
     class Meta:
+        unique_together = (("numero", "torre"))
+        ordering = ['torre', 'numero']
         verbose_name_plural = "habitaciones"
 
 class Rol(models.Model):
@@ -64,7 +67,7 @@ class Persona(models.Model):
     foto = models.ImageField(upload_to='fotos', blank=True, null=True)
     esPrivado = models.BooleanField(default=False)
     restricciones = models.CharField(max_length=16, default="No")
-    habitacion = models.ForeignKey(Habitacion, related_name="ocupantes", null=True, blank=True)
+    habitacion = models.ForeignKey(Habitacion, related_name="ocupantes", null=True, blank=True, on_delete=models.SET_NULL)
     estaRegistrado = models.BooleanField(default=False)
     esJD = models.BooleanField(default=False)
     bus=models.ForeignKey(Bus, related_name="ocupantes", null=True, blank=True)
