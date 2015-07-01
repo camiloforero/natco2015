@@ -257,22 +257,22 @@ def editar_descripcion(request, pk):
 @user_passes_test(conference_check, login_url=reverse_lazy('scheduler:error_permisos'))
 def escarapelas(request):
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="escarapelas_natco.pdf"'
+    response['Content-Disposition'] = 'filename="somefilename.pdf"'
     
     buffer = BytesIO()
 
-    p = canvas.Canvas(buffer, pagesize=(709,788))
+    p = canvas.Canvas(buffer, pagesize=(953,1364))
 
-    url = settings.STATIC_ROOT + 'scheduler/img/escarapela_back_template.png'
-    personas = Persona.objects.filter(Q(rol__esConference=True))
+    url = '/home/camilo/django/natco2015/scheduler'+static('scheduler/img/EscarapelaTemplate.png')
+    personas = Persona.objects.all()
     for persona in personas:
-        #p.setFont('Helvetica', 20)
         p.drawImage(url, 0, 0)
-        #p.drawCentredString(295, 387, persona.user.first_name.split(' ')[0] + ' ' + persona.user.last_name.split(' ')[0])
-        #p.drawCentredString(574, 299, persona.rol.tipo)
-        #p.drawCentredString(551, 387, persona.lc.nombre)
-        #p.drawCentredString(296, 299, persona.cargo)
-        #p.drawInlineImage(persona.qrRegistro.path, 263, 45, 183, 183)
+        p.drawString(100, 373, persona.user.first_name+ ' ' + persona.user.last_name)
+        p.drawString(86, 319, persona.lc.nombre)
+        p.drawString(82, 242, persona.area)
+        p.drawString(236, 242, persona.cargo)
+        print persona.qrRegistro.path
+        p.drawInlineImage(persona.qrRegistro.path, 103,32, 170, 170)
         p.showPage()
     p.save()
     pdf = buffer.getvalue()
@@ -280,31 +280,40 @@ def escarapelas(request):
     response.write(pdf)
     return response
 
-def escarapelas_vpm(request):
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="escarapelas_vpm.pdf"'
-    
-    buffer = BytesIO()
-
-    p = canvas.Canvas(buffer, pagesize=(953,1364))
-
-    url = settings.STATIC_ROOT + 'scheduler/img/escarapela_vpm_template.png'
-    personas = Persona.objects.filter(rol__esConference=True)
-    #for persona in personas:
-    p.setFont('Helvetica', 25)
-    p.drawImage(url, 0, 0)
-    #p.drawCentredString(402, 805, persona.user.first_name+ ' ' + persona.user.last_name)
-    #p.drawCentredString(779, 805, persona.lc.nombre)
-    #p.drawCentredString(814, 676, persona.rol.tipo)
-    #p.drawCentredString(402, 676, persona.cargo)
-    #print persona.qrRegistro.path
-    #p.drawInlineImage(persona.qrRegistro.path, 235,61, 472, 472)
-    p.showPage()
-    p.save()
-    pdf = buffer.getvalue()
-    buffer.close()
-    response.write(pdf)
-    return response
+#def escarapelas_vpm(request):
+#    response = HttpResponse(content_type='application/pdf')
+#    response['Content-Disposition'] = 'filename="escarapelas_vpm.pdf"'
+#    
+#    buffer = BytesIO()
+#
+#    p = canvas.Canvas(buffer, pagesize=(953,1364))
+#
+#    url = settings.STATIC_ROOT + 'scheduler/img/escarapela_vpm_template.png'
+#    #personas = Persona.objects.filter(delegadoVPM=True)
+#    #personas = Persona.objects.filter(rol__esConference=True)
+#    for persona in personas:
+#        p.setFont('Helvetica', 25)
+#        p.drawImage(url, 0, 0)
+#        p.drawCentredString(402, 805, persona.user.first_name+ ' ' + persona.user.last_name)
+#        p.drawCentredString(779, 805, persona.lc.nombre)
+#        #p.drawCentredString(814, 676, persona.area)
+#        #p.drawCentredString(402, 676, persona.rol.tipo)
+#        #p.drawCentredString(814, 676, persona.rol.tipo)
+#        #p.drawCentredString(402, 676, persona.cargo)
+#        print persona.qrRegistro.path
+#        p.drawInlineImage(persona.qrRegistro.path, 235,61, 472, 472)
+#        p.showPage()
+#
+#    #for i in range (1, 10):
+#    #    p.setFont('Helvetica', 25)
+#    #    p.drawImage(url, 0, 0)
+#    #    p.showPage()
+#        
+#    p.save()
+#    pdf = buffer.getvalue()
+#    buffer.close()
+#    response.write(pdf)
+#    return response
 
 def error_permisos(request):
     """Show the user an error page if they try to access a page they shouldn't"""

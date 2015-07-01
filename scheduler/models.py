@@ -69,11 +69,12 @@ class Persona(models.Model):
     restricciones = models.CharField(max_length=16, default="No")
     habitacion = models.ForeignKey(Habitacion, related_name="ocupantes", null=True, blank=True, on_delete=models.SET_NULL)
     estaRegistrado = models.BooleanField(default=False)
+    numMaletas = models.PositiveSmallIntegerField(null=True, blank=True, help_text="La cantidad de maletas que trae esta persona, para hacerle buen tracking", verbose_name="Número de maletas")
     esJD = models.BooleanField(default=False)
     bus=models.ForeignKey(Bus, related_name="ocupantes", null=True, blank=True)
-    puntos = models.IntegerField(default=0)
-    qrRegistro = models.ImageField(upload_to='QR', editable=True, blank=True, null=True)
-    delegadoNatco = models.BooleanField(default=True)
+    puntos = models.PositiveIntegerField(default=0)
+    qrRegistro = models.ImageField(upload_to='QR', editable=True, blank=True, null=True, verbose_name="Código QR")
+    delegadoNatco = models.BooleanField(default=True, verbose_name="Va a Natco?")
     delegadoVPM = models.BooleanField(default=False)
     def __unicode__(self):
         return self.user.first_name + " " + self.user.last_name 
