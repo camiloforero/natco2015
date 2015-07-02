@@ -3,16 +3,18 @@
 {% load staticfiles %}
 
 {% block title %}Registro - {{ usuario.first_name }} {% endblock %}
-{% block page-header  %}  {% endblock %}
+{% block page-header  %}{{ persona.user.first_name }} {{ persona.user.last_name}}{% endblock %}
 {% block body_block %}
-{% if persona.estaRegistrado %}
+{% if persona.estaRegistradoVPM %}
 <p>{{ persona.user.first_name }} {{ persona.user.last_name }} ya está registrada. <a href="{% url 'scheduler:persona' persona.pk %} ">Ver perfil</a></p>
 {% else %}
-<img src="{{ persona.foto.url }}" alt="foto" class="img-responsive"/>
-<p>Deseas registrar a {{ persona.user.first_name }} {{ persona.user.last_name}}?</p>
-<form action="{{ request.get_full_path }}" method="post">
+<img src="{{ persona.foto.url }}" style="padding: 2em" alt="foto" class="img-responsive col-xs-8 col-xs-offset-2"/><br/>
+<form action="{{ request.get_full_path }}" method="post" class="form-horizontal">
     {% csrf_token %}
-    <input type="submit" value="Registrar"/> 
+    <div class=form-group">
+        <label class="col-xs-12" for"numMaletas">Número de maletas</label><input name="numMaletas" type="number" min="0" step="1"/>
+    </div>
+    <input type="submit" value="Registrar" class="btn btn-warning"/> 
 </form>
 {% endif %}
 {% endblock %}

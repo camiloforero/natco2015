@@ -152,7 +152,9 @@ def registrar(request, pk):
     if request.user.persona.rol.esConference:
         persona = Persona.objects.select_related('user').get(pk=pk)
         if request.method == 'POST':
-            persona.estaRegistrado = True
+            numMaletas = request.POST.get("numMaletas")
+            persona.numMaletas = int(numMaletas)
+            persona.estaRegistradoVPM = True
             persona.save()
             return HttpResponseRedirect(request.path)
         else:
@@ -161,6 +163,14 @@ def registrar(request, pk):
 
     else:
         return HttpResponseRedirect(reverse("scheduler:persona", kwargs={'pk':pk}))
+
+@login_required
+@user_passes_test(registrado_check, login_url=reverse_lazy('scheduler:no_registro'))
+@user_passes_test(conference_check, login_url=reverse_lazy('scheduler:error_permisos'))
+def check_in_status(request):
+    usuarios = User.objects.filter(persona__rol__esConference=False, persona__delegadoVPM=True).order_by('persona__estaRegistradoVPM', 'persona__lc__nombre').select_related('persona__lc')
+    context = {'usuarios':usuarios, 'evento':'VPM'}
+    return render(request, 'scheduler/check_in_status.html', context)
             
 @login_required
 @user_passes_test(registrado_check, login_url=reverse_lazy('scheduler:no_registro'))

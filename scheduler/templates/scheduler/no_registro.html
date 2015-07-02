@@ -7,6 +7,9 @@
 {% block body-class %}inicio{% endblock %}
 
 {% block body_block %}
+{% if request.user.persona.estaRegistradoVPM %}
+<p>Hola! Bienvenido a VPM! Espera la funcionalidad completa de la aplicación para cuando te registres en NATCO, al comienzo de Youth to Business. Mientras tanto, mira las diferentes agendas de VPM dentro de <a href="{% url 'scheduler:horario_vpm' %}">este link.</a></p>
+{% endif %}
 <p>Hola! Si ves este mensaje ya estás dentro de tu cuenta personal para NATCO 2015! Sólo te falta registrarte el día del evento con un miembro del OC, quien escaneará este código QR (el cual también estará en tu escarapela).
 También puedes ir cambiando tu contraseña en <a href="{% url "scheduler:password_change" %}">este link.</a></p>
 <img class="img-responsive center-block" src="{{ MEDIA_URL }}{{request.user.persona.qrRegistro }}"></img>

@@ -68,14 +68,15 @@ class Persona(models.Model):
     esPrivado = models.BooleanField(default=False)
     restricciones = models.CharField(max_length=16, default="No")
     habitacion = models.ForeignKey(Habitacion, related_name="ocupantes", null=True, blank=True, on_delete=models.SET_NULL)
-    estaRegistrado = models.BooleanField(default=False)
+    estaRegistrado = models.BooleanField(default=False, verbose_name="¿Hizo check in?", help_text="Determina si el delegado hizo check in para NATCO. En caso afirmativo, dicho delegado tendrá acceso completo a la aplicación")
+    estaRegistradoVPM = models.BooleanField(default=False, verbose_name="¿Está registrado para VPM?", help_text="Este campo dice si el delegado, asumiendo que asiste a VPM, ya hico check in o no. Aún no tienen acceso completo a la aplicación")
     numMaletas = models.PositiveSmallIntegerField(null=True, blank=True, help_text="La cantidad de maletas que trae esta persona, para hacerle buen tracking", verbose_name="Número de maletas")
-    esJD = models.BooleanField(default=False)
+    esJD = models.BooleanField(default=False, verbose_name="¿Es jefe de delegación?", help_text="Determina si el delegado es jefe de delegación, lo cual le da algunos permisos extra dentro de la aplicación")
     bus=models.ForeignKey(Bus, related_name="ocupantes", null=True, blank=True)
     puntos = models.PositiveIntegerField(default=0)
     qrRegistro = models.ImageField(upload_to='QR', editable=True, blank=True, null=True, verbose_name="Código QR")
     delegadoNatco = models.BooleanField(default=True, verbose_name="Va a Natco?")
-    delegadoVPM = models.BooleanField(default=False)
+    delegadoVPM = models.BooleanField(default=False, verbose_name="Va a VPM?")
     def __unicode__(self):
         return self.user.first_name + " " + self.user.last_name 
     def save(self):

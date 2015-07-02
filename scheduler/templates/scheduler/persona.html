@@ -9,6 +9,9 @@
 {% block body-class %}perfil{% endblock %}
 
 {% block body_block %}
+{% if request.user.persona.rol.esConference and not persona.user.estaRegistrado %}
+<p>Este delegado no se encuentra registrado aún.<a href="{% url "scheduler:registrar" pk=persona.pk %}"> Registrar persona</a></p>
+{% endif %}
 <table class="table">
     <tr>
         <td>Correo electrónico</td>

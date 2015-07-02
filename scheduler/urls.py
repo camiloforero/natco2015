@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^personas/(?P<pk>\d+)/$', views.persona, name='persona'),
     url(r'^habitacion/$', views.habitacion, name='habitacion'),
     url(r'^habitaciones/$', views.habitaciones, name='lista_habitaciones'),
+    url(r'^check_in_status/$', views.check_in_status, name='check_in_status'),
     url(r'^habitaciones_csv/$', views.habitaciones_csv, name='lista_habitaciones_csv'),
     url(r'^buses/$', views.buses, name='buses'),
     url(r'^personas/$', views.lista_usuarios, name='networking'),
