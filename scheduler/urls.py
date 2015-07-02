@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^horario/$', views.horario, name='horario'),
     url(r'^horario_admin/$', views.horario_admin, name='horario_admin'),
+    url(r'^horario_vpm/$', views.horario_vpm, name='horario_vpm'),
     url(r'^eventos/(?P<pk>\d+)/$', views.evento, name='evento'),
     url(r'^eventos/inscribir/$', views.lista_inscribir_evento, name='lista_inscribir_evento'),
     url(r'^eventos/(?P<pk>\d+)/editar_descripcion$', views.editar_descripcion, name='editar_descripcion'),

@@ -75,6 +75,12 @@ def horario_admin(request):
     return render(request, 'scheduler/horario_admin.html', context)
 
 @login_required
+def horario_vpm(request):
+    agendas = ("PM", "IGCDP", "OGCDP", "IGIP", "OGIP", "TM", "S&S", "FL&M", "MKT")
+    context = {"sesiones":agendas}
+    return render(request, 'scheduler/horarios_vpm.html', context)
+
+@login_required
 @user_passes_test(registrado_check, login_url=reverse_lazy('scheduler:no_registro'))
 def evento(request, pk):
     evento = get_object_or_404(Evento, pk=pk)
