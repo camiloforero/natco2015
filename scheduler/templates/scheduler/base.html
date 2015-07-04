@@ -39,12 +39,21 @@
         </header>
         <div class="navbar-collapse collapse">
             <menu class="nav navbar-nav navbar-right">
+                <li><a href="/app/patrocinadores/">Patrocinadores</a></li>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'scheduler:horario' %}">Mi horario</a></li>
                 {% if user.persona.rol.esConference %}
-                <li><a href="{% url 'scheduler:horario_admin' %}">Horario general</a></li>
-                <li><a href="{% url 'scheduler:lista_habitaciones' %}">Habitaciones</a></li>
-                <li><a href="{% url 'scheduler:buses' %}">Ver buses</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'scheduler:check_in_status' %}">Check in</a></li>
+                        <li><a href="{% url 'scheduler:horario_admin' %}">Horario general</a></li>
+                        <li><a href="{% url 'scheduler:lista_habitaciones' %}">Habitaciones</a></li>
+                        <li><a href="{% url 'scheduler:buses' %}">Ver buses</a></li>
+                        <li><a href="{% url 'scheduler:lista_inscritos_eventos' %}">Inscritos eventos opcionales</a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url 'scheduler:horarios_vpm' %}">Horarios VPM</a></li>
                 {% else %}
                     <li><a href="{% url 'scheduler:lista_inscribir_evento' %}">Inscribir eventos</a></li>
                     {% if user.persona.rol.esJD %}

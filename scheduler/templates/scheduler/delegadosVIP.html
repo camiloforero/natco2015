@@ -2,15 +2,20 @@
 
 {% load staticfiles %}
 
-{% block title %}Delegados VIP{% endblock %}
-{% block page-header  %}Delegados VIP{% endblock %}
-
+{% block title %}Ranking de puntos VIP{% endblock %}
+{% block page-header  %}Ranking de puntos VIP{% endblock %}
+{% block body-class %}vip{% endblock %}
 {% block body_block %}
-<ol>
     {% for delegado in delegados %}
-    <li>{{delegado}}: {{delegado.puntos}}</li>
+    <div class="center-cropped" style="background-image: url('{{ delegado.foto.url }}'); background-size:cover">
+    </div>
+    <div class="col-xs-12 text-center">
+    <h4>{{delegado}}</h4>
+    <p>
+    {{delegado.lc}}<br/>
+    {{delegado.puntos}}
+    </p>
+    </div>
     {% endfor %}
-</ol>
-
 
 {% endblock %}

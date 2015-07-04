@@ -12,9 +12,10 @@
 <p>Tipo: {{ evento.tipo }}</p>
 <p>Hora inicio: {{evento.horaInicio }}</p>
 <p>Hora fin: {{evento.horaFin }}</p>
-<p>Facilitadores: {% for faci in evento.facis.all %}{{faci.user.first_name }} {{faci.user.last_name }}, {% endfor %}</p>
 <p>Descripción: {{evento.descripcion }}</p>
 {% if request.user.persona.rol.esConference %}
+<h4>Admin:</h4>
+    <p>Facilitadores: {% for faci in evento.facis.all %}{{faci.user.first_name }} {{faci.user.last_name }}, {% endfor %}</p>
     <p>OC encargado: {% for oc in evento.ocsEncargados.all %}{{oc.user.first_name}} {{oc.user.last_name }}, {% endfor %}</p>
     <p>Archivos adjuntos: 
         {% if evento.adjuntos %}<a href="{{ MEDIA_URL }}{{evento.adjuntos.name}}"><strong>Descargar</strong></a>

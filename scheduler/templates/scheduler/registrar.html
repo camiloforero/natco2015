@@ -5,14 +5,13 @@
 {% block title %}Registro - {{ usuario.first_name }} {% endblock %}
 {% block page-header  %}{{ persona.user.first_name }} {{ persona.user.last_name}}{% endblock %}
 {% block body_block %}
-{% if persona.estaRegistradoVPM %}
+{% if persona.estaRegistradoNatco %}
 <p>{{ persona.user.first_name }} {{ persona.user.last_name }} ya está registrada. <a href="{% url 'scheduler:persona' persona.pk %} ">Ver perfil</a></p>
 {% else %}
-<img src="{{ persona.foto.url }}" style="padding: 2em" alt="foto" class="img-responsive col-xs-8 col-xs-offset-2"/><br/>
 <form action="{{ request.get_full_path }}" method="post" class="form-horizontal">
     {% csrf_token %}
     <div class=form-group">
-        <label class="col-xs-12" for"numMaletas">Número de maletas</label><input name="numMaletas" type="number" min="0" step="1"/>
+        <label class="col-xs-12" for"numMaletas">Número de maletas</label><input name="numMaletas" type="number" value="0" min="0" step="1"/>
     </div>
     <input type="submit" value="Registrar" class="btn btn-warning"/> 
 </form>

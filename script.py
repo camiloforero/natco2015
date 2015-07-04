@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from pypodio2 import api
+import csv
 import PIL
 import StringIO
 from django.utils.encoding import force_unicode
@@ -129,5 +130,8 @@ def getNames(full_name):
 
 #for field in fields[0]: print field["external_id"] + str(field["values"][0]["value"])
 
-
-    
+def cargarBuses(csvfile):
+    reader = csv.DictReader(csvfile, dialect='excel')
+    for row in reader:
+        print row['id']
+        print row['nbus']

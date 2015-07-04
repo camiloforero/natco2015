@@ -14,6 +14,7 @@ import qrcode
 import StringIO
 
 class Bus(models.Model):
+    numero = models.PositiveSmallIntegerField(primary_key=True)
     placa = models.CharField(max_length=8, unique=True)
     capacidad = models.PositiveSmallIntegerField(default=20)
     def __unicode__(self):
@@ -22,7 +23,7 @@ class Bus(models.Model):
         verbose_name_plural = "buses"
     
 class Salon(models.Model):
-    nombre = models.CharField(max_length=20, unique=True)
+    nombre = models.CharField(max_length=64, unique=True)
     def __unicode__(self):
         return self.nombre
     class Meta:
@@ -70,6 +71,7 @@ class Persona(models.Model):
     habitacion = models.ForeignKey(Habitacion, related_name="ocupantes", null=True, blank=True, on_delete=models.SET_NULL)
     estaRegistrado = models.BooleanField(default=False, verbose_name="¿Hizo check in?", help_text="Determina si el delegado hizo check in para NATCO. En caso afirmativo, dicho delegado tendrá acceso completo a la aplicación")
     estaRegistradoVPM = models.BooleanField(default=False, verbose_name="¿Está registrado para VPM?", help_text="Este campo dice si el delegado, asumiendo que asiste a VPM, ya hico check in o no. Aún no tienen acceso completo a la aplicación")
+    estaRegistradoVPM2 = models.BooleanField(default=False)
     numMaletas = models.PositiveSmallIntegerField(null=True, blank=True, help_text="La cantidad de maletas que trae esta persona, para hacerle buen tracking", verbose_name="Número de maletas")
     esJD = models.BooleanField(default=False, verbose_name="¿Es jefe de delegación?", help_text="Determina si el delegado es jefe de delegación, lo cual le da algunos permisos extra dentro de la aplicación")
     bus=models.ForeignKey(Bus, related_name="ocupantes", null=True, blank=True)

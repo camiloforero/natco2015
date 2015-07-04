@@ -1,0 +1,18 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Agendas VPM{% endblock %}
+{% block page-header  %}Agendas VPM{% endblock %}
+{% block body-class %} {% endblock %}
+
+{% block body_block %}
+
+{% for area in areas %}
+<div class="list-group">
+    <p><a class="list-group-item" href="{% url 'scheduler:horario_vpm' area=area %}">{{area}}</a></p>
+</div>
+{% endfor %}
+
+
+{% endblock %}

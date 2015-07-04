@@ -8,17 +8,20 @@
 {% block body_block %}
     <p><a href="{% url 'scheduler:lista_habitaciones_csv' %}">Descargar como Excel</a></p>
 <table class="table">
+<thead>
     <tr>
-        <th>Habitación</th>
+        <th colspan="2">Habitación</th>
         <th>Nombre</th>
         <th>LC</th>
         <th>Celular</th>
     <tr>
+</thead
+<tbody>
 {% for habitacion in habitaciones %}
     {% for ocupante in habitacion.ocupantes.all %}
         <tr>
             {% if forloop.first %}
-            <td rowspan="{{ habitacion.ocupantes.all|length }}">{{habitacion.numero}}  </td>
+            <td  colspan="2" rowspan="{{ habitacion.ocupantes.all|length }}">{{ habitacion.torre }} -  {{habitacion.numero}}  </td>
             {% endif %}
             <td> {{ocupante.user.first_name}} {{ocupante.user.last_name}}</td>
             <td> {{ocupante.lc}}</td>
@@ -26,6 +29,7 @@
         </tr>   
     {% endfor %}
 {% endfor %}
+</tbody>
 </table>
 
 

@@ -75,10 +75,15 @@ def horario_admin(request):
     return render(request, 'scheduler/horario_admin.html', context)
 
 @login_required
-def horario_vpm(request):
-    agendas = ("PM", "IGCDP", "OGCDP", "IGIP", "OGIP", "TM", "S&S", "FL&M", "MKT")
-    context = {"sesiones":agendas}
+def horarios_vpm(request):
+    areas = ["PM", "IGCDP", "OGCDP", "IGIP", "OGIP", "TM", "S&S", "FL&M", "MKT"]
+    context = {"areas":areas}
     return render(request, 'scheduler/horarios_vpm.html', context)
+
+@login_required
+def horario_vpm(request, area):
+    context = {"area":area}
+    return render(request, 'scheduler/horario_vpm.html', context)
 
 @login_required
 @user_passes_test(registrado_check, login_url=reverse_lazy('scheduler:no_registro'))
@@ -107,7 +112,7 @@ def habitacion(request):
 @login_required
 @user_passes_test(conference_check, login_url=reverse_lazy('scheduler:error_permisos'))
 def habitaciones(request):
-    habitaciones = Habitacion.objects.all().prefetch_related('ocupantes__user', 'ocupantes__lc').order_by('numero')
+    habitaciones = Habitacion.objects.all().prefetch_related('ocupantes__user', 'ocupantes__lc').order_by('torre', 'numero')
     context = {'habitaciones':habitaciones,}
     return render(request, 'scheduler/lista_habitaciones.html', context)
 
@@ -136,9 +141,9 @@ def buses(request):
 @user_passes_test(registrado_check, login_url=reverse_lazy('scheduler:no_registro'))
 def lista_usuarios(request):
     if request.user.persona.rol.esConference:
-        usuarios = User.objects.all().order_by('persona__lc__nombre').select_related('persona__lc', 'persona__rol')
+        usuarios = User.objects.filter(persona__delegadoNatco=True).order_by('persona__lc__nombre').select_related('persona__lc', 'persona__rol')
     else:
-        usuarios = User.objects.filter(persona__esPrivado=False).order_by('persona__lc__nombre').select_related('persona__lc', 'persona__rol')
+        usuarios = User.objects.filter(persona__esPrivado=False, persona__delegadoNatco=True).order_by('persona__lc__nombre').select_related('persona__lc', 'persona__rol')
 
     context = {'usuarios':usuarios}
     return render(request, 'scheduler/networking.html', context)
@@ -160,7 +165,7 @@ def registrar(request, pk):
         if request.method == 'POST':
             numMaletas = request.POST.get("numMaletas")
             persona.numMaletas = int(numMaletas)
-            persona.estaRegistradoVPM = True
+            persona.estaRegistrado = True
             persona.save()
             return HttpResponseRedirect(request.path)
         else:
@@ -225,6 +230,13 @@ def lista_inscribir_evento(request):
     eventos = Evento.objects.filter(tipo__esInscribible=True).order_by('horaInicio').select_related('tipo')
     context = {'eventos':eventos}
     return render(request, 'scheduler/lista_inscribir_evento.html', context)
+
+@login_required
+@user_passes_test(conference_check, login_url=reverse_lazy('scheduler:error_permisos'))
+def lista_inscritos_eventos(request):
+    eventos = Evento.objects.filter(tipo__esInscribible=True).order_by('horaInicio').select_related('tipo')
+    context = {'eventos':eventos}
+    return render(request, 'scheduler/lista_inscritos_eventos.html', context)
 
 @login_required
 @user_passes_test(registrado_check, login_url=reverse_lazy('scheduler:no_registro'))

@@ -53,6 +53,10 @@ body.horario {
 body.perfil {
     background-image: url('/static/scheduler/img/backgrounds/perfil.png');
 }
+body.vip {
+    background-image: url('/static/scheduler/img/backgrounds/vip.png');
+    background-position:top left;
+}
 body.networking {
     background-image: url('/static/scheduler/img/backgrounds/networking.png');
     background-position:top center;
@@ -152,4 +156,14 @@ form textarea {
   vertical-align: top;
   border-top: 1px solid #F5C701;
   color: white
+}
+.center-cropped {
+    width: 40%;
+    height: 0;
+    padding-bottom:40%;
+    border-radius: 150px;
+    background-position: center top;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    margin:auto;
 }
