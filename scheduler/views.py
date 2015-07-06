@@ -51,7 +51,7 @@ def horario(request):
     tipoRol = rol.tipo
     if(tipoRol=="OC"):
         eventos = Evento.objects.filter(ocsEncargados__pk=persona_pk).prefetch_related('facis__user', 'ocsEncargados__user').select_related('tipo')
-    elif(tipoRol=="FACI" or tipoRol=="Chair"):
+    elif(tipoRol=="MC" or tipoRol=="Chair"):
         eventos = Evento.objects.filter(facis__pk=persona_pk).prefetch_related('facis__user', 'ocsEncargados__user').select_related('tipo')
     else:
         eventos1 = rol.eventos.order_by('horaInicio').prefetch_related('facis__user', 'ocsEncargados__user').select_related('tipo')
@@ -179,8 +179,8 @@ def registrar(request, pk):
 @user_passes_test(registrado_check, login_url=reverse_lazy('scheduler:no_registro'))
 @user_passes_test(conference_check, login_url=reverse_lazy('scheduler:error_permisos'))
 def check_in_status(request):
-    usuarios = User.objects.filter(persona__rol__esConference=False, persona__delegadoVPM=True).order_by('persona__estaRegistradoVPM', 'persona__lc__nombre').select_related('persona__lc')
-    context = {'usuarios':usuarios, 'evento':'VPM'}
+    usuarios = User.objects.filter(persona__rol__esConference=False, persona__delegadoNatco=True).order_by('persona__estaRegistrado', 'persona__lc__nombre').select_related('persona__lc')
+    context = {'usuarios':usuarios, 'evento':'NATCO'}
     return render(request, 'scheduler/check_in_status.html', context)
             
 @login_required
@@ -190,8 +190,10 @@ def feedback_form(request, fecha):
     fechaActual = datetime.strptime(fecha, "%Y-%m-%d")
     print fechaActual
     if request.method == 'POST':
+        eform = 
         CFormSet = CalificationFormSet(0)
         formset = CFormSet(request.POST, prefix="calificaciones")
+        eform = EncuestaForm(request.POST, prefix="encuesta")
         return HttpResponse(formset)
     else:
         rangoFecha = (
@@ -199,7 +201,7 @@ def feedback_form(request, fecha):
         datetime.combine(fechaActual, datetime.max.time())
         )
         initValues=[]
-        eventos = Evento.objects.filter(horaInicio__range=rangoFecha)
+        eventos = Evento.objects.filter(horaInicio__range=rangoFecha, tipo__esCalificable=True).order_by("horaInicio")
         for evento in eventos:
             dicit = {}
             dicit['evento'] = evento.nombre
@@ -207,7 +209,7 @@ def feedback_form(request, fecha):
             initValues.append(dicit)
         CFormSet = CalificationFormSet(len(initValues))
         formset = CFormSet(initial=initValues, queryset=Calificacion.objects.none(), prefix="calificaciones")
-        eform = EncuestaForm(prefix="encuesta")
+        eform = EncuestaForm(prefix="encuesta", initial={'fecha':fechaActual})
         context = {'formset': formset, 'eform': eform}
         return render(request, 'scheduler/feedback_form.html', context)
 
@@ -215,7 +217,7 @@ def feedback_form(request, fecha):
 @user_passes_test(registrado_check, login_url=reverse_lazy('scheduler:no_registro'))
 @user_passes_test(jd_check, login_url=reverse_lazy('scheduler:error_permisos'))
 def feedback(request):
-    fechas = Evento.objects.datetimes('horaInicio', 'day')
+    fechas = Evento.objects.filter(tipo__esCalificable=True).datetimes('horaInicio', 'day')
     context = {'fechas':fechas}
     return render(request, 'scheduler/feedback.html', context)
 

@@ -2,8 +2,8 @@
 
 {% load staticfiles %}
 
-{% block title %}{{ fecha }} {% endblock %}
-{% block page-header  %}  {% endblock %}
+{% block title %}{{ fecha }}{% endblock %}
+{% block page-header %}Feedback{% endblock %}
 
 {% block body_block %}
 
@@ -17,6 +17,9 @@
         </tr>
         {{ form }}
         {% endfor %}
+        <tr>
+            <th colspan=2>&nbsp;</th>
+        </tr>
         {{ eform }}
     </table>
     <input type="submit", value="Enviar">

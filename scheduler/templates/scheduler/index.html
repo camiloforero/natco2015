@@ -17,6 +17,7 @@ Hola {{user.first_name }}
         <p>Consulta tu habitación y tus roommates dando <a href="{% url "scheduler:habitacion" %}">click aquí</a></p>
         <p>Para consultar tu horario y tus sesiones da <a href="{% url "scheduler:horario" %}">click aquí.</a></p>
         <p>Para cambiar tu contraseña da <a href="{% url 'scheduler:password_change' %}?next=/app/">click aquí</a></p>
+        <p>Tu número de bus es {{ user.persona.bus_id}} y la placa es {{ user.persona.bus.placa }}</p>
         </div>
     </div>
 </div>

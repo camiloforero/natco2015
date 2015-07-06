@@ -6,7 +6,7 @@ import StringIO
 from django.utils.encoding import force_unicode
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import IntegrityError
-from scheduler.models import User, Persona, Rol, LC, Habitacion
+from scheduler.models import User, Persona, Rol, LC, Habitacion, Bus
 CLIENT_ID = "natco2015"
 CLIENT_SECRET = "6FHzzKdpWDz3UpBJzxRgaIHM88wqQZR6eIN2Q9v31UbdvqWvl9fnZL4Xo3xpROfy"
 #APP_ID = "12485061" 
@@ -133,5 +133,11 @@ def getNames(full_name):
 def cargarBuses(csvfile):
     reader = csv.DictReader(csvfile, dialect='excel')
     for row in reader:
-        print row['id']
-        print row['nbus']
+        try:
+            persona= Persona.objects.get(cedula=row['id'])
+            bus = Bus.objects.get_or_create(pk=row['bus'])[0]
+            bus.save()
+            persona.bus = bus
+            persona.save()
+        except Persona.DoesNotExist:
+            print "La persona %s %s no está inscrita en la aplicación" % (row['nombre'], row['apellido'])

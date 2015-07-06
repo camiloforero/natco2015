@@ -33,6 +33,9 @@ class EncuestaForm(ModelForm):
     class Meta:
         model = Encuesta
         fields = ['fecha', 'calOC', 'calLgt', 'comentarios']
+        widgets = { 
+            'fecha':HiddenInput()
+        }
 
 
 def CalificationFormSet(extra):

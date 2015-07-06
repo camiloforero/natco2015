@@ -17,7 +17,7 @@ class HabitacionForm(forms.ModelForm):
         super(HabitacionForm, self).__init__(*args, **kwargs)
         if self.instance:
             self.fields['ocupantes'].initial = self.instance.ocupantes.all()
-            self.fields['ocupantes'].queryset = Persona.objects.filter(Q(habitacion=self.instance)|Q(habitacion=None)).select_related('user')
+            self.fields['ocupantes'].queryset = Persona.objects.filter((Q(habitacion=self.instance)|Q(habitacion=None))&Q(delegadoNatco=True)).select_related('user')
 
     def save(self, *args, **kwargs):
         instance = super(HabitacionForm, self).save()

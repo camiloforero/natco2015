@@ -5,7 +5,7 @@
 {% block title %}Registro - {{ usuario.first_name }} {% endblock %}
 {% block page-header  %}{{ persona.user.first_name }} {{ persona.user.last_name}}{% endblock %}
 {% block body_block %}
-{% if persona.estaRegistradoNatco %}
+{% if persona.estaRegistrado %}
 <p>{{ persona.user.first_name }} {{ persona.user.last_name }} ya está registrada. <a href="{% url 'scheduler:persona' persona.pk %} ">Ver perfil</a></p>
 {% else %}
 <form action="{{ request.get_full_path }}" method="post" class="form-horizontal">

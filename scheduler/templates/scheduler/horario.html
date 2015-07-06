@@ -66,10 +66,12 @@ $(document).ready(function() {
             {% endfor %}
         ],
 
+        {% if request.user.persona.rol.esConference %}
         eventRender: function(event, element) {
             setClickableTooltip(element, event.tooltip);
             element.attr('title', 'asdf');
         },
+        {% endif %}
         // put your options and callbacks here
     })
 

@@ -15,10 +15,10 @@ import StringIO
 
 class Bus(models.Model):
     numero = models.PositiveSmallIntegerField(primary_key=True)
-    placa = models.CharField(max_length=8, unique=True)
+    placa = models.CharField(max_length=8, blank=True, null=True)
     capacidad = models.PositiveSmallIntegerField(default=20)
     def __unicode__(self):
-        return self.placa
+        return str(self.numero)
     class Meta:
         verbose_name_plural = "buses"
     
@@ -101,6 +101,7 @@ class TipoEvento(models.Model):
     color = RGBColorField(blank=True, null=True)
     colorTexto = RGBColorField(blank=True, null=True, verbose_name="Color del texto")
     esInscribible = models.BooleanField(default=False, help_text="Esto determina si a este evento van todos los asistentes, o es posible inscribirse a el de manera voluntaria")
+    esCalificable = models.BooleanField(default=True, help_text="Determina si este evento debería ser calificado por el formulario de feedback de los JDDs")
     def __unicode__(self):
         return self.tipo
     class Meta:
@@ -130,8 +131,8 @@ class Evento(models.Model):
 class Encuesta(models.Model):
     fecha = models.DateField()
     validators = [MinValueValidator(0), MaxValueValidator(5)]
-    calOC = models.PositiveSmallIntegerField(validators=validators)
-    calLgt = models.PositiveSmallIntegerField(validators=validators)
+    calOC = models.PositiveSmallIntegerField(validators=validators, verbose_name="Calificación del OC")
+    calLgt = models.PositiveSmallIntegerField(validators=validators, verbose_name="Calificación de la logística")
     comentarios = models.TextField()
     lc = models.ForeignKey(LC, related_name='encuestas')
     class Meta:
