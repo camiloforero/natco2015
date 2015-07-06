@@ -190,7 +190,6 @@ def feedback_form(request, fecha):
     fechaActual = datetime.strptime(fecha, "%Y-%m-%d")
     print fechaActual
     if request.method == 'POST':
-        eform = 
         CFormSet = CalificationFormSet(0)
         formset = CFormSet(request.POST, prefix="calificaciones")
         eform = EncuestaForm(request.POST, prefix="encuesta")
