@@ -18,4 +18,8 @@ def alto(hInicio, hFin):
     #inicio = datetime.strptime(hInicio, "%H:%M")
     #fin = datetime.strptime(hFin, "%H:%M")
     return (hFin - hInicio).seconds / 1800
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
     

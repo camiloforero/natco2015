@@ -64,7 +64,7 @@ class Persona(models.Model):
     celular = models.BigIntegerField(blank=True, null=True)
     area = models.CharField(max_length=16)
     rol = models.ForeignKey(Rol, related_name="personas")
-    lc = models.ForeignKey(LC, blank=True, null=True)
+    lc = models.ForeignKey(LC, blank=True, null=True, related_name="miembros")
     foto = models.ImageField(upload_to='fotos', blank=True, null=True)
     esPrivado = models.BooleanField(default=False)
     restricciones = models.CharField(max_length=16, default="No")
@@ -79,6 +79,7 @@ class Persona(models.Model):
     qrRegistro = models.ImageField(upload_to='QR', editable=True, blank=True, null=True, verbose_name="Código QR")
     delegadoNatco = models.BooleanField(default=True, verbose_name="Va a Natco?")
     delegadoVPM = models.BooleanField(default=False, verbose_name="Va a VPM?")
+    retroalimentacion = models.TextField(null=True, blank=True, verbose_name="Retroalimentación", help_text="Tu opinión es muy importante para nosotros. Si tienes alguna duda, comentario o feedback, escríbelo en este campo.")
     def __unicode__(self):
         return self.user.first_name + " " + self.user.last_name 
     def save(self):

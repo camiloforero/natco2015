@@ -26,7 +26,7 @@ SECRET_KEY = '_x8_$iql!kjq*@n^o)_!*wultf@09hj#cw6aapn!9m&nhsb$6)'
 DEBUG = True
 
 
-INTERNAL_IPS = ('200.118.50.79')
+#INTERNAL_IPS = ('190.216.136.42')
 
 ALLOWED_HOSTS = []
 
@@ -43,11 +43,11 @@ INSTALLED_APPS = (
     'scheduler',
     'colorful',
     'widget_tweaks',
-    'debug_toolbar',
+#    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

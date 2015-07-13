@@ -5,12 +5,12 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import F, Q
+from django.db.models import F, Q, Count
 from django.forms.formsets import formset_factory
 from django.templatetags.static import static
 from django.utils import timezone
-from models import Evento, Habitacion, User, Persona, Calificacion, Bus
-from forms import CalificationFormSet, EncuestaForm, EventoFileForm, EventoDescripcionForm
+from models import Evento, Habitacion, User, Persona, Calificacion, Bus, LC
+from forms import CalificationFormSet, EncuestaForm, EventoFileForm, EventoDescripcionForm, FeedbackForm
 from django.conf import settings
 from datetime import datetime, time, timedelta, date
 from io import BytesIO
@@ -21,6 +21,10 @@ import os
 #----- TESTS --------#
 #These test are for the @user_passes_test decorators
 #THey are used to restrict certain views to special groups of users
+def conference_jd_check(user):
+    """Returns whether the current user is part of the conference team or not."""
+    return user.persona.rol.esConference or user.persona.esJD
+
 def conference_check(user):
     """Returns whether the current user is part of the conference team or not."""
     return user.persona.rol.esConference
@@ -32,6 +36,10 @@ def jd_check(user):
 def registrado_check(user):
     """Returns whether the current user has registered or not"""
     return user.persona.estaRegistrado
+
+def darDelegados():
+    """Returns a list of all current registered delegates who are not part of the conference team"""
+    return Persona.objects.filter(rol__esConference=False, estaRegistrado=True).order_by("lc", "user__first_name").select_related("user")
 
 @login_required
 @user_passes_test(registrado_check, login_url=reverse_lazy('scheduler:no_registro'))
@@ -223,7 +231,9 @@ def feedback(request):
 @login_required
 @user_passes_test(conference_check, login_url=reverse_lazy('scheduler:error_permisos'))
 def asistentes_evento(request, pk):
-    pass #TODO
+    evento = Evento.objects.get(pk=pk)
+    asistentes = evento.pAsistentes.order_by("lc", "user__last_name").select_related("lc", "user")
+    return render(request, "scheduler/lista_inscritos_evento.html", {"personas":asistentes, "evento":evento})
 
 @login_required
 @user_passes_test(registrado_check, login_url=reverse_lazy('scheduler:no_registro'))
@@ -235,9 +245,36 @@ def lista_inscribir_evento(request):
 @login_required
 @user_passes_test(conference_check, login_url=reverse_lazy('scheduler:error_permisos'))
 def lista_inscritos_eventos(request):
-    eventos = Evento.objects.filter(tipo__esInscribible=True).order_by('horaInicio').select_related('tipo')
+    eventos = Evento.objects.filter(tipo__esInscribible=True).order_by('horaInicio').select_related('tipo', 'salon').annotate(Count('pAsistentes'))
     context = {'eventos':eventos}
     return render(request, 'scheduler/lista_inscritos_eventos.html', context)
+
+@login_required
+@user_passes_test(conference_jd_check, login_url=reverse_lazy('scheduler:error_permisos'))
+def lista_lcs_inscritos_eventos(request):
+    if(request.user.persona.rol.esConference==True):
+        personas = darDelegados().prefetch_related('eventos').select_related('lc').order_by('lc__nombre')
+    elif(request.user.persona.esJD):
+        personas = Persona.objects.filter(lc=request.user.persona.lc).prefetch_related('eventos').select_related('lc')
+
+    horas = Evento.objects.filter(tipo__esInscribible=True).datetimes('horaInicio', 'minute')
+    lista = []
+    for persona in personas:
+        dictEventos = {}
+        eventos = persona.eventos.all()
+        for evento in eventos:
+            dictEventos[evento.horaInicio] = evento
+        lista.append(dictEventos)
+    listaTotal = zip(personas, lista)
+    context = {'lista':listaTotal, 'horas':horas, 'eventos':dictEventos}
+    return render(request, 'scheduler/lista_detallada_inscritos.html', context)
+
+@login_required
+@user_passes_test(conference_check, login_url=reverse_lazy('scheduler:error_permisos'))
+def lista_lcs_inscritos_eventos2(request):
+    lcs = LC.objects.filter(~Q(nombre="Conference Team")).order_by('nombre').prefetch_related('miembros__user', 'miembros__eventos')
+    context = {'lcs':lcs}
+    return render(request, 'scheduler/lista_lcs.html', context)
 
 @login_required
 @user_passes_test(registrado_check, login_url=reverse_lazy('scheduler:no_registro'))
@@ -270,6 +307,18 @@ def inscribir_evento(request, pk):
         return HttpRedirect(reverse("scheduler:evento", kwargs={'pk':pk})) #TODO
 
 @login_required
+def feedback_individual(request):
+    persona = request.user.persona
+    form = FeedbackForm(instance=persona)
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST, instance = persona)
+        form.save()
+        return redirect('scheduler:index')
+    else:
+        context = {'evento':persona, 'form':form, 'formUrl':reverse('scheduler:feedback_individual')}
+        return render (request, 'scheduler/editar_descripcion.html', context)
+
+@login_required
 @user_passes_test(conference_check, login_url=reverse_lazy('scheduler:error_permisos'))
 def editar_descripcion(request, pk):
     evento = Evento.objects.get(pk=pk)
@@ -279,7 +328,7 @@ def editar_descripcion(request, pk):
         form.save()
         return redirect('scheduler:evento', pk=pk)
     else:
-        context = {'evento':evento, 'form':form}
+        context = {'evento':evento, 'form':form, 'formUrl':reverse('scheduler:editar_descripcion', kwargs={'pk':pk})}
         return render (request, 'scheduler/editar_descripcion.html', context)
 
 @login_required

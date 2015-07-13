@@ -1,0 +1,18 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}LCs{% endblock %}
+{% block page-header  %}LCs{% endblock %}
+{% block body-class %} {% endblock %}
+
+{% block body_block %}
+
+{% for lc in lcs %}
+<div class="list-group">
+    <p><a class="list-group-item" href="">{{lc}}</a></p>
+</div>
+{% endfor %}
+
+
+{% endblock %}

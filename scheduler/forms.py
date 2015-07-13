@@ -1,13 +1,18 @@
 from django import forms
 from django.forms import ModelForm
 from django.forms.widgets import HiddenInput, TextInput, MultipleHiddenInput
-from scheduler.models import Calificacion, Encuesta, Evento
+from scheduler.models import Calificacion, Encuesta, Evento, Persona
 from django.forms.models import BaseModelFormSet, modelformset_factory
 
 class EventoFileForm(ModelForm):
     class Meta:
         model = Evento
         fields=['adjuntos']
+
+class FeedbackForm(ModelForm):
+    class Meta:
+        model = Persona
+        fields=['retroalimentacion']
 
 class EventoDescripcionForm(ModelForm):
     class Meta:

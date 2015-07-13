@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="{% static "scheduler/css/style.css"%}"/>
         <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.2/fullcalendar.min.css' />
         <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.2/fullcalendar.min.css' />
-        {% if request.user.username == 'comunicaciones' %}
+        {% if request.user.username == 'JU' %}
         <style>
         body {
             font-family: "Comic Sans Ms", "nexa", Verdana, sans-serif !important;
@@ -41,6 +41,7 @@
             <menu class="nav navbar-nav navbar-right">
                 <li><a href="/app/patrocinadores/">Patrocinadores</a></li>
             {% if user.is_authenticated %}
+                <li><a href="{% url 'scheduler:feedback_individual' %}">Mi feedback</a></li>
                 <li><a href="{% url 'scheduler:horario' %}">Mi horario</a></li>
                 {% if user.persona.rol.esConference %}
                 <li class="dropdown">
@@ -50,14 +51,21 @@
                         <li><a href="{% url 'scheduler:horario_admin' %}">Horario general</a></li>
                         <li><a href="{% url 'scheduler:lista_habitaciones' %}">Habitaciones</a></li>
                         <li><a href="{% url 'scheduler:buses' %}">Ver buses</a></li>
-                        <li><a href="{% url 'scheduler:lista_inscritos_eventos' %}">Inscritos eventos opcionales</a></li>
+                        <li><a href="{% url 'scheduler:lista_inscritos_eventos' %}">Cantidad de inscritos a eventos</a></li>
+                        <li><a href="{% url 'scheduler:lista_lcs_inscritos_eventos' %}">Personas inscritas</a></li>
                     </ul>
                 </li>
                 <li><a href="{% url 'scheduler:horarios_vpm' %}">Horarios VPM</a></li>
                 {% else %}
                     <li><a href="{% url 'scheduler:lista_inscribir_evento' %}">Inscribir eventos</a></li>
-                    {% if user.persona.rol.esJD %}
-                    <li><a href="{% url 'scheduler:feedback' %}">Feedback</a></li>
+                    {% if user.persona.esJD %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">JDD Admin<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                        <li><a href="{% url 'scheduler:lista_lcs_inscritos_eventos' %}">Ver inscritos a eventos</a></li>
+                        <!-- <li><a href="{% url 'scheduler:feedback' %}">Feedback</a></li> -->
+                        </ul>
+                    </li>
                     {% endif %}
                 {% endif %}
                 <li><a href="{% url 'scheduler:networking' %}">Networking</a></li>

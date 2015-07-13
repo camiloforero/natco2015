@@ -27,10 +27,10 @@
     <form method="post" enctype="multipart/form-data" action="{% url 'scheduler:evento' evento.pk %}">{% csrf_token %}{{ form.errors}} {{ form }} <input type="submit" value="Subir archivo"></input></form>
 
     <p>Descripción OC: {{evento.descripcionOC}}<br/> <a href="{% url 'scheduler:editar_descripcion' pk=evento.pk %}">Editar </a></p>
-    {% if evento.esOpcional %}
+    {% if evento.tipo.esInscribible %}
     <p><a href="{% url 'scheduler:asistentes_evento' evento.pk %}">Ver inscritos</a></p>
     {% endif %}
-{% else %}
+{% elif evento.tipo.esInscribible %}
     <form method="post" action="{% url 'scheduler:inscribir_evento' evento.pk %}">
         {% csrf_token %}
         <input type="submit" value="Inscribir evento"></input>

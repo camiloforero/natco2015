@@ -1,0 +1,51 @@
+{% extends 'scheduler/base.html' %}
+
+{% load staticfiles %}
+{% load app_filters %}
+
+{% block title %}Inscritos eventos{% endblock %}
+
+{% block page-header  %} Lista inscritos  {% endblock %}
+
+{% block body-class %}networking{% endblock %}
+
+{% block body_block %}
+<div id="users">
+<table class="table table-responsive">
+    <thead>
+    <tr>
+        <th><input class="search" placeholder="Buscar" style="color:black;"/></th>
+    </tr>
+    <tr>
+        <th>Nombre</th>
+        <th>LC</th>
+        {% for hora in horas %}
+        <th>{{ hora }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody class="list">
+    {% for persona, eventos in lista %}
+        <td class="b_nombre"><a href="">{{ persona.user.first_name }} {{ persona.user.last_name }}</a></td>
+        <td class="b_lc">{{ persona.lc }}</td>
+        {% for hora in horas %}
+        <td class="b_evento">{{eventos|get_item:hora}}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.1.1/list.min.js"></script>
+<script>
+    var options = {
+        valueNames: [ 'b_nombre', 'b_lc', 'b_evento' ],
+        page: 500
+    };
+
+    var userList = new List('users', options);
+</script>
+{% endblock %}

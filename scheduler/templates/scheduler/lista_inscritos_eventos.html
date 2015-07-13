@@ -24,7 +24,7 @@
             <a href="{% url 'scheduler:evento' evento.pk %}">{{ evento.nombre }}</a>
         </td>
         <td> {{ evento.salon.nombre }} </td>
-        <td> {{ evento.pAsistentes.count }}</td>
+        <td> {{ evento.pAsistentes__count }}</td>
     </tr>
     {% endfor %}
 {% endfor %}
