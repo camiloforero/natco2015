@@ -1,11 +1,34 @@
+# coding:utf-8
+from __future__ import unicode_literals
 from django.contrib import admin
 
-from .models import Evento, Rol, Salon, Persona, Habitacion, LC, Bus, TipoEvento
 from django import forms
+from django.conf.urls import url
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
+from django.contrib.admin.sites import AdminSite
 from django.db.models import Q
 from django.utils.html import format_html
+
+from .models import Evento, Rol, Salon, Persona, Habitacion, LC, Bus, TipoEvento
+from . import admin_views
+
+class EventAdminSite(AdminSite):
+    site_header = "Administración de Starway 2016"
+    site_title = "Starway 2016"
+    index_title = "Administración de la aplicación de Starway"
+    index_template = "event_admin/index.html"
+
+    def get_urls(self):
+        urls = super(EventAdminSite, self).get_urls()
+        event_urls = [
+            url(r'^subir_delegados/$', self.admin_view(admin_views.UploadDelegatesView.as_view()), name='subir_delegados'),
+            url(r'^subir_conference/$', self.admin_view(admin_views.UploadConferenceView.as_view()), name='subir_conference'),
+            url(r'^subir_habitaciones/$', self.admin_view(admin_views.UploadRoomsView.as_view()), name='subir_habitaciones'),
+            ]
+        return urls + event_urls
+
+admin_site = EventAdminSite(name='event_admin')
 
 class HabitacionForm(forms.ModelForm):
     class Meta:
@@ -49,12 +72,16 @@ class PersonaInline(admin.StackedInline):
 
 class UserAdmin(AuthUserAdmin):
     inlines=[PersonaInline]
-    list_display = ['name', 'rol', 'lc', 'bus', 'habitacion']
-    list_select_related=('persona__rol', 'persona__lc', 'persona__habitacion')
+    list_display = ['nombre', 'rol', 'lc', 'bus', 'habitacion']
+    list_select_related=('persona__nombre', 'persona__rol', 'persona__lc', 'persona__habitacion')
 
-    def name(self, obj):
-        return ("%s %s" % (obj.first_name, obj.last_name))
-    name.short_description = 'Nombre'
+    def nombre(self, obj):
+        return obj.persona.nombre
+    nombre.short_description = 'Nombre'
+
+    def rol(self, obj):
+        return obj.persona.rol
+    rol.short_description = 'Rol'
 
     def lc(self, obj):
         return obj.persona.lc
@@ -63,9 +90,6 @@ class UserAdmin(AuthUserAdmin):
     def bus(self, obj):
         return obj.persona.bus
     bus.short_description = 'Bus'
-    def rol(self, obj):
-        return obj.persona.rol
-    rol.short_description = 'Rol'
 
     def habitacion(self, obj):
         return obj.persona.habitacion
@@ -81,19 +105,17 @@ class EventoAdmin(admin.ModelAdmin):
 #class CalificacionAdmin(admin.ModelAdmin):
 #    list_display = ['evento', 'lc', 'puntaje_sesion', 'puntaje_faci']
 
-admin.site.unregister(User)
-admin.site.unregister(Group)
-admin.site.register(User, UserAdmin)
-
-admin.site.register(Evento, EventoAdmin)
-admin.site.register(Rol)
-admin.site.register(Salon)
-admin.site.register(Habitacion, HabitacionAdmin)
-admin.site.register(LC)
-#admin.site.register(Calificacion, CalificacionAdmin)
-admin.site.register(Bus)
-# Register your models here.
-admin.site.register(TipoEvento)
+#admin_site.unregister(User)
+#admin_site.unregister(Group)
+admin_site.register(User, UserAdmin)
+admin_site.register(Evento, EventoAdmin)
+admin_site.register(Habitacion, HabitacionAdmin)
+admin_site.register(Rol)
+admin_site.register(Salon)
+admin_site.register(LC)
+#admin_site.register(Calificacion, CalificacionAdmin)
+admin_site.register(Bus)
+admin_site.register(TipoEvento)
 
     
     

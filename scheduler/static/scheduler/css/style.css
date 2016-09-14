@@ -23,9 +23,10 @@
 }
 body {
     background-color: #3D3A3B;
-    color: #F5C701;
+    color: #25419A;
     font-family: 'nexa', Verdana, sans-serif;
     padding-top:70px;
+    background-image: url('/static/scheduler/img/backgrounds/starway_background.png');
     background-repeat:no-repeat;
     background-size: cover;
     background-height:100%;
@@ -33,13 +34,14 @@ body {
     background-position:top right;
 }
 p {
-    color:white;
+    color:black;
 }
+/*
 body.habitacion {
     background-image: url('/static/scheduler/img/backgrounds/habitaciones.png');
 }
 body.login {
-    background-image: url('/static/scheduler/img/backgrounds/login.png');
+    background-image: url('/static/scheduler/img/backgrounds/starway_background.png');
 }
 body.inicio {
     background-image: url('/static/scheduler/img/backgrounds/inicio.png');
@@ -65,12 +67,13 @@ body.patrocinadores {
     background-image: url('/static/scheduler/img/backgrounds/patrocinadores.png');
     background-position:top center;
 }
+*/
 strong {
 }
 header h1 {
     font-size: 1.5em;
     font-weight: bold;
-    color: #F5C701;
+    color: ##25419A;
     text-align: center
 }
 div.form {
@@ -112,7 +115,7 @@ div.habitacion div.numero::first-letter {
 div.habitacion div.roommates {
     border-left: 1px solid ;
     padding-top:20px;
-    color:#ffffff;
+    color:#000000;
     
 }
 div.habitacion div.roommates h4 {
@@ -148,14 +151,14 @@ form textarea {
 
 .table>thead>tr>th {
   vertical-align: bottom;
-  border-bottom: 2px solid #F5C701;
+  border-bottom: 2px solid ##25419A;
 }
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
   padding: 8px;
   line-height: 1.42857143;
   vertical-align: top;
-  border-top: 1px solid #F5C701;
-  color: white
+  border-top: 1px solid ##25419A;
+  color:black 
 }
 .center-cropped {
     width: 40%;

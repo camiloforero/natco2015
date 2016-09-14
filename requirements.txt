@@ -1,0 +1,12 @@
+Django==1.9.7
+django-colorful==1.2
+django-debug-toolbar==1.4
+django-widget-tweaks==1.4.1
+django-xsendfile==1.0
+Pillow==3.2.0
+psycopg2==2.6.1
+pytz==2016.4
+qrcode==5.3
+reportlab==3.3.0
+six==1.10.0
+sqlparse==0.1.19

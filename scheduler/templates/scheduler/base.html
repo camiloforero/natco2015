@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
         <meta name="description" content="">
         <meta name="author" content="Camilo Forero">
-        <title>Natco2015 - {% block title %}Woooooo!{% endblock %}</title>
+        <title>Starway 2016 - {% block title %}Woooooo!{% endblock %}</title>
         <link rel="icon" href="/static/favicon.png" type="image/png" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
         <link rel="stylesheet" href="{% static "scheduler/css/style.css"%}"/>
@@ -35,11 +35,13 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-            <a class="navbar-brand" href="/app/">Natco2015</a>
+            <a class="navbar-brand" href="/app/">Starway 2016</a>
         </header>
         <div class="navbar-collapse collapse">
             <menu class="nav navbar-nav navbar-right">
+                {% comment %}
                 <li><a href="/app/patrocinadores/">Patrocinadores</a></li>
+                {% endcomment %}
             {% if user.is_authenticated %}
                 <li><a href="{% url 'scheduler:feedback_individual' %}">Mi feedback</a></li>
                 <li><a href="{% url 'scheduler:horario' %}">Mi horario</a></li>
@@ -57,7 +59,9 @@
                 </li>
                 <li><a href="{% url 'scheduler:horarios_vpm' %}">Horarios VPM</a></li>
                 {% else %}
+                {% comment %}
                     <li><a href="{% url 'scheduler:lista_inscribir_evento' %}">Inscribir eventos</a></li>
+                {% endcomment %}
                     {% if user.persona.esJD %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">JDD Admin<span class="caret"></span></a>
@@ -68,7 +72,9 @@
                     </li>
                     {% endif %}
                 {% endif %}
+                {% comment %}
                 <li><a href="{% url 'scheduler:networking' %}">Networking</a></li>
+                {% endcomment %}
                 <li><a href="{% url 'scheduler:logout' %}">Logout</a></li>
             {% else %}
                 <li><a href="{% url 'scheduler:login' %}">Login</a></li>

@@ -59,17 +59,18 @@ class LC(models.Model):
 
 class Persona(models.Model):
     user = models.OneToOneField(User, unique=True)
+    nombre = models.CharField(max_length=128, default="Sin nombre")
     cedula = models.CharField(max_length=16, blank=True, null=True)
     cargo = models.CharField(max_length=64)
     celular = models.BigIntegerField(blank=True, null=True)
     area = models.CharField(max_length=16)
-    rol = models.ForeignKey(Rol, related_name="personas")
+    rol = models.ForeignKey(Rol, null=True, related_name="personas", on_delete=models.SET_NULL)
     lc = models.ForeignKey(LC, blank=True, null=True, related_name="miembros")
     foto = models.ImageField(upload_to='fotos', blank=True, null=True)
     esPrivado = models.BooleanField(default=False)
     restricciones = models.CharField(max_length=16, default="No")
     habitacion = models.ForeignKey(Habitacion, related_name="ocupantes", null=True, blank=True, on_delete=models.SET_NULL)
-    estaRegistrado = models.BooleanField(default=False, verbose_name="¿Hizo check in?", help_text="Determina si el delegado hizo check in para NATCO. En caso afirmativo, dicho delegado tendrá acceso completo a la aplicación")
+    estaRegistrado = models.BooleanField(default=False, verbose_name="¿Hizo check in?", help_text="Determina si el delegado hizo check in. En caso afirmativo, dicho delegado tendrá acceso completo a la aplicación")
     estaRegistradoVPM = models.BooleanField(default=False, verbose_name="¿Está registrado para VPM?", help_text="Este campo dice si el delegado, asumiendo que asiste a VPM, ya hico check in o no. Aún no tienen acceso completo a la aplicación")
     estaRegistradoVPM2 = models.BooleanField(default=False)
     numMaletas = models.PositiveSmallIntegerField(null=True, blank=True, help_text="La cantidad de maletas que trae esta persona, para hacerle buen tracking", verbose_name="Número de maletas")
@@ -81,14 +82,14 @@ class Persona(models.Model):
     delegadoVPM = models.BooleanField(default=False, verbose_name="Va a VPM?")
     retroalimentacion = models.TextField(null=True, blank=True, verbose_name="Retroalimentación", help_text="Tu opinión es muy importante para nosotros. Si tienes alguna duda, comentario o feedback, escríbelo en este campo.")
     def __unicode__(self):
-        return self.user.first_name + " " + self.user.last_name 
+        return self.nombre 
     def save(self):
         if not self.qrRegistro:
             if not self.pk:
                 super(Persona, self).save()
             username = os.geteuid()
             ausername = os.getegid()
-            img = qrcode.make('http://192.241.211.190/app'+reverse('scheduler:registrar', args=(self.pk,)))
+            img = qrcode.make('http://104.131.144.106'+reverse('scheduler:registrar', args=(self.pk,)))
             img_io = StringIO.StringIO()
             img.save(img_io, "JPEG")
             img_file = InMemoryUploadedFile(img_io, None, 'qr1.jpg', 'image/jpg', img_io.len, None)

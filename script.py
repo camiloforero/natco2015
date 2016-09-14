@@ -58,7 +58,7 @@ def createUser(user_dict):
         persona.save()
     except Persona.DoesNotExist:
         email = user_dict["e-mail-correo-electronico"]
-        username=email.split("@")[0]
+        username=email.split("@")[0].lower()
         num = 0
         try:
             while True:

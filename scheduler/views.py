@@ -9,6 +9,7 @@ from django.db.models import F, Q, Count
 from django.forms.formsets import formset_factory
 from django.templatetags.static import static
 from django.utils import timezone
+from django.views.generic.base import TemplateView
 from models import Evento, Habitacion, User, Persona, Calificacion, Bus, LC
 from forms import CalificationFormSet, EncuestaForm, EventoFileForm, EventoDescripcionForm, FeedbackForm
 from django.conf import settings
@@ -40,6 +41,10 @@ def registrado_check(user):
 def darDelegados():
     """Returns a list of all current registered delegates who are not part of the conference team"""
     return Persona.objects.filter(rol__esConference=False, estaRegistrado=True).order_by("lc", "user__first_name").select_related("user")
+
+#TODO: Agregar login required
+class HorarioFacilView(TemplateView):
+    template_name = "scheduler/horario_sencillo.html"
 
 @login_required
 @user_passes_test(registrado_check, login_url=reverse_lazy('scheduler:no_registro'))

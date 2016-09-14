@@ -1,0 +1,9 @@
+{% extends "admin/index.html" %}
+{% load i18n admin_static %}
+{% block content %}
+{{ block.super }}
+<p>
+    <a href="{% url "event_admin:subir_delegados" %}">Subir delegados</a>
+    <a href="{% url "event_admin:subir_conference" %}">Subir conference</a>
+</p>
+{% endblock %}

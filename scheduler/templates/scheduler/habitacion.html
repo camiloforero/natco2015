@@ -15,7 +15,7 @@
         <div class="roommates col-xs-6">
             <h4>Roommates</h4>
             {% for persona in habitacion.ocupantes.all %}
-                {{ persona.user.first_name|truncatewords2:1 }} {{ persona.user.last_name|truncatewords2:1 }}<br/>
+                {{ persona.nombre }}<br/>
             {% endfor %}
         </div>
     </div>
